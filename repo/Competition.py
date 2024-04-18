@@ -18,6 +18,7 @@ import sys
 from threading import Thread
 from datetime import datetime
 import pytz
+from flask import Flask, Response
 #######VARIABLES########
 vehicle.parameters['PLND_ENABLED']=2
 vehicle.parameters['PLND_TYPE']=1
@@ -29,6 +30,14 @@ vehicle.parameters['CH9_OPT']=0
 vehicle.parameters['CH10_OPT']=0
 vehicle.parameters['CH11_OPT']=0
 vehicle.channels.overrides['3']=0
+FRIEND=17
+trigger_fire=27
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(trigger_fire, GPIO.OUT)
+GPIO.output(trigger_fire, GPIO.LOW)
+
+app = Flask(__name__)
+
 velocity=-.5 #m/s
 seekingalt=5 #m
 FiringAlt=2
@@ -61,17 +70,16 @@ interrupt = 0
 Kill_Interrupt=0
 ########################
 fire_init_time=0
-ids_to_find = [1, 2, 3, 72]#72 ##arucoID
+ids_to_find = [16, 17, 18, 19]# ##arucoID
 targsleft = 3
 index = 0
 marker_size = 30.48 ##CM
 time_last_seen=0
 
+alias = ["GMU", "GWU", "VT", "Howard", "USF"]
 
-
-dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_50)
+aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_50)
 parameters =  cv2.aruco.DetectorParameters()
-detector = cv2.aruco.ArucoDetector(dictionary, parameters)
 
 horizontal_res = 1536
 vertical_res = 864
@@ -170,7 +178,6 @@ def get_distance_meters(targetLocation,currentLocation):
     return math.sqrt((dLon*dLon)+(dLat*dLat))*1.113195e5
 
 def goto(targetLocation):
-	#TODO: WHEREINEEDTOBE()
     global reached, flush
     if flush==1:
         return None
@@ -190,11 +197,7 @@ def goto(targetLocation):
     #while
     while vehicle.mode.name=="GUIDED":
         currentDistance = get_distance_meters(targetLocation,vehicle.location.global_relative_frame)
-    		# LOOK FOR MARKER() # TODO
-    		# if FOUND && STILL A TARGET:
-    		# 	DO TRACK()
-    		# 	DETERMINE WHERE I NEED TO BE()
-    		# 	GOTO(WHERE I NEED TO BE)
+
         if currentDistance<distanceToTargetLocation*.03:
             print("Reached waypoint.")
             if flush == 0:
@@ -370,28 +373,27 @@ def AltCorrect(FiringAlt):
         vehicle.channels.overrides['3']=1500
     return None
 
-def fire(): #TODO: Fire logic
+def fire():
     global fire_time, ids_to_find, targsleft, id_to_find, index, sub, flush, flush_time, Fire
     initial_time=time.time()
     timestamp = datetime.now(pytz.utc).isoformat().replace("+00:00","Z")
     Lat = vehicle.location.global_relative_frame.lat
     Lon = vehicle.location.global_relative_frame.lon
-    id=72#:TODO
+    id=id_to_find#:TODO_MAYBE
     print("USF","UAV","WaterBlast!",id_to_find,timestamp,Lat,Lon,sep = "_")
-     #TODO: GPIO_high
+     GPIO.output(trigger_fire, GPIO.HIGH)
 
     while True:
         subscriber()
         if time.time()-initial_time > fire_time:
-             #TODO: GPIOlow
+             GPIO.output(trigger_fire, GPIO.LOW)
             Fire = False
             index=0
             targsleft=targsleft-1
             ids_to_find.remove(id_to_find)
             break
 
-     #TODO: WHEREINEEDTOBE
-    sub.unregister()
+    
     vehicle.mode = VehicleMode('GUIDED')
     while vehicle.mode != VehicleMode('GUIDED'):
         time.sleep(1)
@@ -489,7 +491,10 @@ def subscriber():
                     cv2.putText(np_data,marker_position,(10,50),0,.7,(255,0,0),thickness=2)
                     print(marker_position)
                     print('FOUND COUNT: '+str(found_count)+ ' NOTFOUND COUNT: '+str(notfound_count))
-                    cv2.imshow
+		    ret,buffer = cv2.imencode('.jpg', np_data)
+		    frame = buffer.tobytes()
+		    yield (b'--frame\r\n'
+               		   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
                     found_count = found_count + 1
                     found = True
@@ -518,11 +523,12 @@ def subscriber():
         if index > targsleft:
             index=0
         if flush == 1: #and time.time()-flush_time >3:dddd
-            #sub.unregister()
             return None
         return None
 
-
+@app.route('/video_feed')
+def video_feed():
+	return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 def interrupt():
     global interrupt, Kill_Interrupt, last_refresh_time, refresh_time
@@ -606,6 +612,7 @@ if __name__=='__main__':
         goto(0)
 
         while True:
+	    app.run(host='0.0.0.0', port=5000)
             if interrupt == True:
                 break
             if flush == 1:
@@ -614,6 +621,7 @@ if __name__=='__main__':
                 time.sleep(3)
                 just_flushed=1
                 goto(0)
+	     
 
                 # lat_home=-35.3632609#vehicle.location.global_relative_frame.lat
                 # lon_home=149.1652352#vehicle.location.global_relative_frame.lon
