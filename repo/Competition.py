@@ -126,9 +126,7 @@ def connectMyCopter():
 	connection_string = args.connect
 
 	if not connection_string:
-		import dronekit_sitl
-		sitl = dronekit_sitl.start_default()
-		connection_string = sitl.connection_string()
+            connection_string='127.0.0.1:14550'
 
 	vehicle = connect(connection_string,wait_ready=True)
 
