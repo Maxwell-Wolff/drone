@@ -115,22 +115,18 @@ time_to_wait = .1 ##100 ms
 last_refresh_time=0
 refresh_time=10
 ################FUNCTIONS###############
+
 def connectMyCopter():
+        parser = argparse.ArgumentParser(description='commands')
+        parser.add_argument('--connect')
+        args = parser.parse_args()
 
-	parser = argparse.ArgumentParser(description='commands')
-	parser.add_argument('--connect')
-	args = parser.parse_args()
+        connection_string = args.connect
+        baud_rate = 57600
 
-	connection_string = args.connect
+        vehicle = connect(connection_string,baud=baud_rate) #,wait_ready=True)
+        return vehicle
 
-	if not connection_string:
-		import dronekit_sitl
-		sitl = dronekit_sitl.start_default()
-		connection_string = sitl.connection_string()
-
-	vehicle = connect(connection_string,wait_ready=True)
-
-	return vehicle
 
 def arm_and_takeoff(targetHeight):
     while vehicle.is_armable !=True:
