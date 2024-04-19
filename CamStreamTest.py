@@ -16,7 +16,7 @@ vertical_res = 864
 horizontal_fov = 102 * (math.pi / 180) ##62.2 for picam V2, 53.5 for V1
 vertical_fov = 67 * (math.pi / 180) ##48.8 for V2, 41.41 for V1
 
-calib_data_path = r"/home/rpi/Desktop/MultiMatrix.npz"
+calib_data_path = r"/home/rpi/drone/MultiMatrix.npz"
 
 calib_data = np.load(calib_data_path)
 print(calib_data.files)
