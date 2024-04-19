@@ -30,10 +30,16 @@ vehicle.parameters['CH10_OPT']=0
 vehicle.parameters['CH11_OPT']=0
 vehicle.channels.overrides['3']=0
 
+gpfire = 17
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setup(gpfire, GPIO.OUT)
+GPIO.output(gpfire, GPIO.LOW)
+
 velocity=-.5 #m/s
 seekingalt=5 #m
 FiringAlt=2
-fire_time = 2
+fire_time = 1
 init = 0
 waypointinit=0
 wpinit_time = 0
@@ -372,37 +378,34 @@ def AltCorrect(FiringAlt):
     return None
 
 def fire(): #TODO: Fire logic
-    global fire_time, ids_to_find, targsleft, id_to_find, index, sub, flush, flush_time, Fire
-    initial_time=time.time()
-    timestamp = datetime.now(pytz.utc).isoformat().replace("+00:00","Z")
-    Lat = vehicle.location.global_relative_frame.lat
-    Lon = vehicle.location.global_relative_frame.lon
-    id=72#:TODO
-    print("USF","UAV","WaterBlast!",id_to_find,timestamp,Lat,Lon,sep = "_")
-     #TODO: GPIO_high
+	global fire_time, ids_to_find, targsleft, id_to_find, index, sub, flush, flush_time, Fire
+	initial_time=time.time()
+	timestamp = datetime.now(pytz.utc).isoformat().replace("+00:00","Z")
+	Lat = vehicle.location.global_relative_frame.lat
+	Lon = vehicle.location.global_relative_frame.lon
+	id=72#:TODO
+	print("USF","UAV","WaterBlast!",id_to_find,timestamp,Lat,Lon,sep = "_")
+	GPIO.output(gpfire, GPIO.HIGH)
 
-    while True:
-        subscriber()
-        if time.time()-initial_time > fire_time:
-             #TODO: GPIOlow
-            Fire = False
-            index=0
-            targsleft=targsleft-1
-            ids_to_find.remove(id_to_find)
-            break
+	while True:
+		subscriber()
+		if time.time()-initial_time > fire_time:
+			GPIO.output(gpfire, GPIO.LOW)
+			Fire = False
+			index=0
+			targsleft=targsleft-1
+			ids_to_find.remove(id_to_find)
+			break
 
-     #TODO: WHEREINEEDTOBE
-    sub.unregister()
-    vehicle.mode = VehicleMode('GUIDED')
-    while vehicle.mode != VehicleMode('GUIDED'):
-        time.sleep(1)
-    print("ENDFIRE")
-    flush=1
-    flush_time=time.time()
-    #dummy_yaw_initializer(True,seekingalt)
-    time.sleep(1)
-
-    return None
+	vehicle.mode = VehicleMode('GUIDED')
+	while vehicle.mode != VehicleMode('GUIDED'):
+		time.sleep(1)
+	print("ENDFIRE")
+	flush=1
+	flush_time=time.time()
+	#dummy_yaw_initializer(True,seekingalt)
+	time.sleep(1)
+	return None
 
 
 def WHEREINEEDTOBE():
