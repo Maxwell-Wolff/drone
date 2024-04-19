@@ -50,7 +50,7 @@ flush_time=0
 just_flushed=0
 
 
-waypoints=[LocationGlobalRelative(-35.36303741,149.1652374,5),LocationGlobalRelative(lat_home-0.00022349,lon_home-0.0000022,5),LocationGlobalRelative(lat_home,lon_home,5)]
+waypoints= #TODO
 
 wpinit_time=0
 codeinit=0
