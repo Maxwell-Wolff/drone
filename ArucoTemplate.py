@@ -35,33 +35,50 @@ velocity=-.5 #m/s
 takeoff_height=4 #m
 FiringAlt=2
 ########################
-newimg_pub = rospy.Publisher('/camera/color/image_new', Image, queue_size=10)
 
-id_to_find = 72 ##arucoID
-marker_size = 20 ##CM
 
-aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_ARUCO_ORIGINAL)
-parameters = aruco.DetectorParameters_create()
+id_to_find =  ##TODOarucoID
 
-horizontal_res = 640
-vertical_res = 480
+horizontal_res = 1536
+vertical_res = 864
 
-horizontal_fov = 62.2 * (math.pi / 180) ##62.2 for picam V2, 53.5 for V1
-vertical_fov = 48.8 * (math.pi / 180) ##48.8 for V2, 41.41 for V1
+horizontal_fov = 102 * (math.pi / 180) ##62.2 for picam V2, 53.5 for V1
+vertical_fov = 67 * (math.pi / 180) ##48.8 for V2, 41.41 for V1
 
 found_count=0
 notfound_count=0
 
 #############CAMERA INTRINSICS#######
 
-dist_coeff = [0.0, 0.0, 0.0, 0.0, 0.0]
-camera_matrix = [[530.8269276712998, 0.0, 320.5],[0.0, 530.8269276712998, 240.5],[0.0, 0.0, 1.0]]
-np_camera_matrix = np.array(camera_matrix)
-np_dist_coeff = np.array(dist_coeff)
+calib_data_path = r"/home/rpi/drone/MultiMatrix.npz"
+calib_data = np.load(calib_data_path)
+cam_mat = calib_data["camMatrix"]
+dist_coef = calib_data["distCoef"]
+r_vectors = calib_data["rVector"]
+t_vectors = calib_data["tVector"]
 
+marker_dict = cv.aruco.getPredefinedDictionary(cv.aruco.DICT_6X6_50)
+param_markers =  cv.aruco.DetectorParameters()
+detector = cv.aruco.ArucoDetector(marker_dict, param_markers)
 #####
 time_last=0
 time_to_wait = .1 ##100 ms
+
+picam2=Picamera2()
+picam2.preview_configuration.main.size = (1536, 864)
+picam2.preview_configuration.main.format = "RGB888"
+picam2.preview_configuration.align()
+picam2.configure("preview")
+picam2.start()
+
+MARKER_SIZE = 30.48  #CM
+
+alias = ["GMU","GWU","VT","Howard", "USF"]
+centerx_array = np.array([0, 0, 0, 0, 0])
+centery_array = np.array([0, 0, 0, 0, 0])
+tempx= np.array([50, 50, 50, 50, 50])
+tempy= np.array([50, 50, 50, 50, 50])
+distance = np.array([0, 0, 0, 0, 0, 0])
 ################FUNCTIONS###############
 def connectMyCopter():
         parser = argparse.ArgumentParser(description='commands')
