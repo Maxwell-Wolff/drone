@@ -1,5 +1,3 @@
-91% of storage used … If you run out, you can't create, edit, and upload files. Get 100 GB of storage for $1.99 $0.49 for 1 month.
-#!/usr/bin/env python
 
 ########IMORTS#########
 
