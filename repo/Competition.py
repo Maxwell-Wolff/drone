@@ -2,8 +2,8 @@
 from __future__ import print_function
 from picamera2 import Picamera2
 import RPi.GPIO as GPIO
-import cv2
-import cv2.aruco as aruco
+import cv2 as cv
+from cv2 import aruco
 import sys
 import time
 import math
@@ -18,7 +18,6 @@ import sys
 from threading import Thread
 from datetime import datetime
 import pytz
-from flask import Flask, Response
 #######VARIABLES########
 vehicle.parameters['PLND_ENABLED']=2
 vehicle.parameters['PLND_TYPE']=1
@@ -30,13 +29,6 @@ vehicle.parameters['CH9_OPT']=0
 vehicle.parameters['CH10_OPT']=0
 vehicle.parameters['CH11_OPT']=0
 vehicle.channels.overrides['3']=0
-FRIEND=17
-trigger_fire=27
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(trigger_fire, GPIO.OUT)
-GPIO.output(trigger_fire, GPIO.LOW)
-
-app = Flask(__name__)
 
 velocity=-.5 #m/s
 seekingalt=5 #m
@@ -56,30 +48,22 @@ ugh=0
 flush=0
 flush_time=0
 just_flushed=0
-lat_home=-35.3632609#vehicle.location.global_relative_frame.lat
-lon_home=149.1652352#vehicle.location.global_relative_frame.lon
-wp_home=LocationGlobalRelative(lat_home,lon_home,5)
-wp1=LocationGlobalRelative(-35.36303741,149.1652374,5)
-wp2=LocationGlobalRelative(lat_home-0.00022349,lon_home-0.0000022,5)
+
+
 waypoints=[LocationGlobalRelative(-35.36303741,149.1652374,5),LocationGlobalRelative(lat_home-0.00022349,lon_home-0.0000022,5),LocationGlobalRelative(lat_home,lon_home,5)]
+
 wpinit_time=0
 codeinit=0
-
-
 interrupt = 0
 Kill_Interrupt=0
 ########################
 fire_init_time=0
-ids_to_find = [16, 17, 18, 19]# ##arucoID
+ids_to_find = [1, 2, 3, 72]#72 ##arucoID
 targsleft = 3
 index = 0
-marker_size = 30.48 ##CM
 time_last_seen=0
 
-alias = ["GMU", "GWU", "VT", "Howard", "USF"]
-
-aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_50)
-parameters =  cv2.aruco.DetectorParameters()
+app = Flask(__name__)
 
 horizontal_res = 1536
 vertical_res = 864
@@ -92,17 +76,21 @@ found=False
 notfound_count=0
 notfound=0
 #############CAMERA INTRINSICS#######
-calib_data_path= r"/home/rpi/repo/MultMatrix.npz"
+calib_data_path = r"/home/rpi/Desktop/MultiMatrix.npz"
 calib_data = np.load(calib_data_path)
 #print(calib_data.files)
 
 # r_vectors = calib_data["rVector"]
 # t_vectors = calib_data["tVector"]
 
-dist_coeff = calib_data["distCoef"]
-camera_matrix = calib_data["camMatrix"]
-np_camera_matrix = np.array(camera_matrix)
-np_dist_coeff = np.array(dist_coeff)
+cam_mat = calib_data["camMatrix"]
+dist_coef = calib_data["distCoef"]
+r_vectors = calib_data["rVector"]
+t_vectors = calib_data["tVector"]
+
+marker_dict = cv.aruco.getPredefinedDictionary(cv.aruco.DICT_6X6_50)
+param_markers =  cv.aruco.DetectorParameters()
+detector = cv.aruco.ArucoDetector(marker_dict, param_markers)
 
 ############INIT CAMERA#############
 picam2=Picamera2()
@@ -111,6 +99,16 @@ picam2.preview_configuration.main.format = "RGB888"
 picam2.preview_configuration.align()
 picam2.configure("preview")
 picam2.start()
+
+MARKER_SIZE = 30.48  #CM
+
+alias = ["GMU","GWU","VT","Howard", "USF"]
+centerx_array = np.array([0, 0, 0, 0, 0])
+centery_array = np.array([0, 0, 0, 0, 0])
+tempx= np.array([50, 50, 50, 50, 50])
+tempy= np.array([50, 50, 50, 50, 50])
+distance = np.array([0, 0, 0, 0, 0, 0])
+
 #####
 time_last=0
 time_to_wait = .1 ##100 ms
@@ -126,12 +124,14 @@ def connectMyCopter():
 	connection_string = args.connect
 
 	if not connection_string:
-            connection_string='127.0.0.1:14550'
+		import dronekit_sitl
+		sitl = dronekit_sitl.start_default()
+		connection_string = sitl.connection_string()
 
 	vehicle = connect(connection_string,wait_ready=True)
 
 	return vehicle
-  
+
 def arm_and_takeoff(targetHeight):
     while vehicle.is_armable !=True:
         print('Waiting for vehicle to become armable')
@@ -176,6 +176,7 @@ def get_distance_meters(targetLocation,currentLocation):
     return math.sqrt((dLon*dLon)+(dLat*dLat))*1.113195e5
 
 def goto(targetLocation):
+	#TODO: WHEREINEEDTOBE()
     global reached, flush
     if flush==1:
         return None
@@ -195,7 +196,11 @@ def goto(targetLocation):
     #while
     while vehicle.mode.name=="GUIDED":
         currentDistance = get_distance_meters(targetLocation,vehicle.location.global_relative_frame)
-
+    		# LOOK FOR MARKER() # TODO
+    		# if FOUND && STILL A TARGET:
+    		# 	DO TRACK()
+    		# 	DETERMINE WHERE I NEED TO BE()
+    		# 	GOTO(WHERE I NEED TO BE)
         if currentDistance<distanceToTargetLocation*.03:
             print("Reached waypoint.")
             if flush == 0:
@@ -225,23 +230,23 @@ def goto(targetLocation):
     return None
 
 def breakgoto(targetLocation): # Goto handled differently for landing.
-	global init				   # Time is needed so that the landcoord is not
-	vehicle.simple_goto(targetLocation) # immediately equal to current location.
+    global init				   # Time is needed so that the landcoord is not
+    vehicle.simple_goto(targetLocation) # immediately equal to current location.
 										# This allows vehicle that has drifed to
-	while vehicle.mode.name=="GUIDED":	#return to its position when given Land.
-		if init==0:
-			time.sleep(0.5)
-			init=1
-		elif init==1:
-			currentDistance = get_distance_meters(targetLocation,vehicle.location.global_relative_frame)
-			if currentDistance<1:
-				print("Returned to Break Point")
-				time.sleep(1)
-				init=0
-				break
-				return None
-        if interrupt == True:
-            return None
+    while vehicle.mode.name=="GUIDED":	#return to its position when given Land.
+        if init==0:
+            time.sleep(0.5)
+            init=1
+        elif init==1:
+            currentDistance = get_distance_meters(targetLocation,vehicle.location.global_relative_frame)
+            if currentDistance<1:
+                print("Returned to Break Point")
+                time.sleep(1)
+                init=0
+                break
+                return None
+            if interrupt == True:
+                return None
 
 def Land():
     if Kill_Interrupt==True:
@@ -337,7 +342,6 @@ def track(x,y):
     print(Fire)
     if Fire == False:
         if vehicle.location.global_relative_frame.alt/FiringAlt < 1.2 and vehicle.location.global_relative_frame.alt/FiringAlt > 0.8:
-            print("URABITCH")
             if time_taken==0:
                 tracking_time=time.time()
                 time_taken=1
@@ -348,7 +352,7 @@ def track(x,y):
                 return None
             print("TIMETAKEN:",tracking_time)
             if time.time()-tracking_time > 5:
-                print("NUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGE")
+                #print("NUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGE")
                 send_local_ned_velocity(0.3,0.3,0)
                 time_taken=0
                 #MARK NOT A TARGET HERE RETURN RESUME SIGNAL
@@ -371,27 +375,28 @@ def AltCorrect(FiringAlt):
         vehicle.channels.overrides['3']=1500
     return None
 
-def fire():
+def fire(): #TODO: Fire logic
     global fire_time, ids_to_find, targsleft, id_to_find, index, sub, flush, flush_time, Fire
     initial_time=time.time()
     timestamp = datetime.now(pytz.utc).isoformat().replace("+00:00","Z")
     Lat = vehicle.location.global_relative_frame.lat
     Lon = vehicle.location.global_relative_frame.lon
-    id=id_to_find#:TODO_MAYBE
+    id=72#:TODO
     print("USF","UAV","WaterBlast!",id_to_find,timestamp,Lat,Lon,sep = "_")
-     GPIO.output(trigger_fire, GPIO.HIGH)
+     #TODO: GPIO_high
 
     while True:
         subscriber()
         if time.time()-initial_time > fire_time:
-             GPIO.output(trigger_fire, GPIO.LOW)
+             #TODO: GPIOlow
             Fire = False
             index=0
             targsleft=targsleft-1
             ids_to_find.remove(id_to_find)
             break
 
-    
+     #TODO: WHEREINEEDTOBE
+    sub.unregister()
     vehicle.mode = VehicleMode('GUIDED')
     while vehicle.mode != VehicleMode('GUIDED'):
         time.sleep(1)
@@ -423,6 +428,23 @@ def WHEREINEEDTOBE():
 
     return(currentwp)
 
+def estimatePoseSingleMarkers(corners, marker_size, mtx, distortion):
+    
+    marker_points = np.array([[-marker_size / 2, marker_size / 2, 0],
+                              [marker_size / 2, marker_size / 2, 0],
+                              [marker_size / 2, -marker_size / 2, 0],
+                              [-marker_size / 2, -marker_size / 2, 0]], dtype=np.float32)
+    trash = []
+    rvecs = []
+    tvecs = []
+    
+    for c in corners:
+        nada, R, t = cv.solvePnP(marker_points, c, mtx, distortion, False, cv.SOLVEPNP_IPPE_SQUARE)
+        rvecs.append(R)
+        tvecs.append(t)
+        trash.append(nada)
+    return rvecs, tvecs, trash
+
 def subscriber():
     if interrupt == True:
         return None
@@ -434,99 +456,133 @@ def subscriber():
 
     id_to_find=ids_to_find[index]
 
-    if time.time() - time_last > time_to_wait:
-        img = picam2.capture_array("main")
-        np_data = rnp.numpify(img) ##Deserialize image data into array
-        gray_img = cv2.cvtColor(np_data, cv2.COLOR_BGR2GRAY)
-        vehicle.channels.overrides['8']=2000
-        ids = ''
-        (corners, ids, rejected) = aruco.detectMarkers(image=gray_img,dictionary=aruco_dict,parameters=parameters)
+    
+    frame = picam2.capture_array("main")
+    gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    
+    vehicle.channels.overrides['8']=2000
+    ids = ''
+    marker_corners, marker_IDs, reject = detector.detectMarkers(gray_frame)
 
-        try:
-            print("index:",index)
-            if ids is not None:
-                if ids[0]==id_to_find:
-                    just_flushed=0
-                    AltCorrect(FiringAlt)
-                    ret = aruco.estimatePoseSingleMarkers(corners,marker_size,cameraMatrix=np_camera_matrix,distCoeffs=np_dist_coeff)
-                    (rvec, tvec) = (ret[0][0,0,:],ret[1][0,0,:])
-                    x = '{:.2f}'.format(tvec[0]) ### Xerror/distance between camera and aruco in CM
-                    y = '{:.2f}'.format(tvec[1]) ### Yerror/distance between camera and aruco in CM
-                    z = '{:.2f}'.format(tvec[2]) ### Zerror/distance between camera and aruco in CM
+    try:
+        print("index:",index)
+        if marker_corners:
+            just_flushed=0
+            AltCorrect(FiringAlt)
+            rVec, tVec, _ = estimatePoseSingleMarkers(
+                marker_corners, MARKER_SIZE, cam_mat, dist_coef
+            )
+            total_markers = range(0, marker_IDs.size)
+            for ids, corners, i in zip(marker_IDs, marker_corners, total_markers):
+                cv.polylines(
+                    frame, [corners.astype(np.int32)], True, (0, 255, 255), 4, cv.LINE_AA
+                )
+                corners = corners.reshape(4, 2)
+                corners = corners.astype(int)
+                top_right = corners[0].ravel()
+                top_left = corners[1].ravel()
+                bottom_right = corners[2].ravel()
+                bottom_left = corners[3].ravel()
+                
+                x = round(tVec[i][0][0],1)
+                y = round(tVec[i][1][0],1)
+                z = np.sqrt(tVec[i][0][2] ** 2 + tVec[i][0][0] ** 2 + tVec[i][0][1] ** 2)
 
-                    y_sum=0
-                    x_sum=0
-                    vy=0
-                    vx=0
-                    x_sum = corners[0][0][0][0] + corners[0][0][1][0] + corners[0][0][2][0] +corners[0][0][3][0]
-                    y_sum = corners[0][0][0][1] + corners[0][0][1][1] + corners[0][0][2][1] +corners[0][0][3][1]
+                y_sum=0
+                x_sum=0
+                
+                x_sum = marker_corners[0][0][0][0] + marker_corners[0][0][1][0] + marker_corners[0][0][2][0] +marker_corners[0][0][3][0]
+                y_sum = marker_corners[0][0][0][1] + marker_corners[0][0][1][1] + marker_corners[0][0][2][1] +marker_corners[0][0][3][1]
 
-                    x_avg = x_sum / 4
-                    y_avg = y_sum / 4
-                    x_ang = (x_avg - horizontal_res*.5)*horizontal_fov/horizontal_res
-                    y_ang = (y_avg - vertical_res*.5)*vertical_fov/vertical_res
-                    print("X_Ang:",x_ang)
-                    print("Y_Ang:",y_ang)
+                x_avg = x_sum / 4
+                y_avg = y_sum / 4
+                x_ang = (x_avg - horizontal_res*.5)*horizontal_fov/horizontal_res
+                y_ang = (y_avg - vertical_res*.5)*vertical_fov/vertical_res
+                print("X_Ang:",x_ang)
+                print("Y_Ang:",y_ang)
+                print("\n\n")
 
-
-                    if vehicle.mode !='LOITER':
-                        vehicle.mode = VehicleMode('LOITER')
-                        while vehicle.mode !='LOITER':
-                                time.sleep(1)
-                        track(x_ang,y_ang)
-                        tracking=True
-                        ugh=0
-                    else:
-                        track(x_ang,y_ang)
-                        tracking=True
-                        ugh=0
-
-                    marker_position = 'MARKER POSITION: x='+x+' y='+y+' z='+z
-
-                    aruco.drawDetectedMarkers(np_data,corners)
-                    aruco.drawAxis(np_data,np_camera_matrix,np_dist_coeff,rvec,tvec,10)
-                    ##putText(image, text_to_draw,position,font_face,fontScale,color,thickness)
-                    cv2.putText(np_data,marker_position,(10,50),0,.7,(255,0,0),thickness=2)
-                    print(marker_position)
-                    print('FOUND COUNT: '+str(found_count)+ ' NOTFOUND COUNT: '+str(notfound_count))
-		    ret,buffer = cv2.imencode('.jpg', np_data)
-		    frame = buffer.tobytes()
-		    yield (b'--frame\r\n'
-               		   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-                    found_count = found_count + 1
-                    found = True
-
-                    time_last_seen=time.time()
+                if vehicle.mode !='LOITER':
+                    vehicle.mode = VehicleMode('LOITER')
+                    while vehicle.mode !='LOITER':
+                            time.sleep(1)
+                    track(x_ang,y_ang)
+                    tracking=True
+                    ugh=0
                 else:
-                    notfound_count=notfound_count+1
-                    if time.time()- time_last_seen > timetosee:
-                        index = index+1
-                        tracking = False
+                    track(x_ang,y_ang)
+                    tracking=True
+                    ugh=0
 
+                marker_position = 'MARKER POSITION: x='+x+' y='+y+' z='+z
+
+                point = cv.drawFrameAxes(frame, cam_mat, dist_coef, rVec[i], tVec[i], 4, 4)
+                cv.putText(
+                    frame,
+                    f"id: {alias[int(str(ids[0]))-16]}",
+                    top_right,
+                    cv.FONT_HERSHEY_PLAIN,
+                    1.3,
+                    (0, 0, 255),
+                    2,
+                    cv.LINE_AA,
+                )
+                
+                cv.putText(
+                    frame,
+                    f"x:{round(tVec[i][0][0],1)} y: {round(tVec[i][1][0],1)} ",
+                    bottom_right,
+                    cv.FONT_HERSHEY_PLAIN,
+                    1.0,
+                    (0, 0, 255),
+                    2,
+                    cv.LINE_AA,
+                )
+        
+                
+                print(marker_position)
+                print('FOUND COUNT: '+str(found_count)+ ' NOTFOUND COUNT: '+str(notfound_count))
+                
+
+                found_count = found_count + 1
+                found = True
+
+                time_last_seen=time.time()
             else:
                 notfound_count=notfound_count+1
                 if time.time()- time_last_seen > timetosee:
                     index = index+1
                     tracking = False
-        except Exception as e:
-            print('Target likely not found')
-            print(e)
+
+        else:
             notfound_count=notfound_count+1
-            if time.time()- time_last_seen > 3 and timetosee:
+            if time.time()- time_last_seen > timetosee:
                 index = index+1
                 tracking = False
-        time_last = time.time()
+    except Exception as e:
+        print('Target likely not found')
+        print(e)
+        notfound_count=notfound_count+1
+        if time.time()- time_last_seen > 3 and timetosee:
+            index = index+1
+            tracking = False
+    time_last = time.time()
 
-        if index > targsleft:
-            index=0
-        if flush == 1: #and time.time()-flush_time >3:dddd
-            return None
+    if index > targsleft:
+        index=0
+    if flush == 1: #and time.time()-flush_time >3:dddd
+        #sub.unregister()
         return None
+    ret,buffer = cv.imencode('.jpg', frame)
+    frame = buffer.tobytes()
+    yield (b'--frame\r\n'
+           b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+    return None
 
 @app.route('/video_feed')
 def video_feed():
-	return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    	return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 def interrupt():
     global interrupt, Kill_Interrupt, last_refresh_time, refresh_time
@@ -584,22 +640,14 @@ def interrupt():
 
 
 if __name__=='__main__':
+    app.run(host='0.0.0.0', port=5000)
 ###Variables
-    if codeinit==0:
-        vehicle.airspeed=2.23 #5mph
-        lat_home=-35.3632609#vehicle.location.global_relative_frame.lat
-        lon_home=149.1652352#vehicle.location.global_relative_frame.lon
-        wp_home=LocationGlobalRelative(lat_home,lon_home,5)
-        wp1=LocationGlobalRelative(-35.36303741,149.1652374,5)
-        wp2=LocationGlobalRelative(lat_home-0.00022349,lon_home-0.0000022,5)
-        print("\nlat_home:")
-        print(lat_home)
-        print("\nlon_home:")
-        print(lon_home)
-        interruptor = Thread(target=interrupt)
-        interruptor.start()
-        codeinit=1
-      
+    vehicle.airspeed=2.23 #5mph
+
+    interruptor = Thread(target=interrupt)
+    interruptor.start()
+    codeinit=1
+
     # whereineedtobe = Thread(target=WHEREINEEDTOBE)
     # whereineedtobe.start()
 
@@ -610,7 +658,6 @@ if __name__=='__main__':
         goto(0)
 
         while True:
-	    app.run(host='0.0.0.0', port=5000)
             if interrupt == True:
                 break
             if flush == 1:
@@ -619,7 +666,6 @@ if __name__=='__main__':
                 time.sleep(3)
                 just_flushed=1
                 goto(0)
-	     
 
                 # lat_home=-35.3632609#vehicle.location.global_relative_frame.lat
                 # lon_home=149.1652352#vehicle.location.global_relative_frame.lon
