@@ -76,7 +76,7 @@ found=False
 notfound_count=0
 notfound=0
 #############CAMERA INTRINSICS#######
-calib_data_path = r"/home/rpi/Desktop/MultiMatrix.npz"
+calib_data_path = r"/home/rpi/drone/MultiMatrix.npz"
 calib_data = np.load(calib_data_path)
 #print(calib_data.files)
 
