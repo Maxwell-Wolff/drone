@@ -135,7 +135,7 @@ def connectMyCopter():
 	vehicle.parameters['CH10_OPT']=0
 	vehicle.parameters['CH11_OPT']=0
 	vehicle.channels.overrides['3']=0
-        return vehicle
+	return vehicle
 
 
 def arm_and_takeoff(targetHeight):
