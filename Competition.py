@@ -661,14 +661,15 @@ if __name__=='__main__':
 	interruptor.start()
 	codeinit=1
 
-	connectMyCopter()
-	vehicle.airspeed=2.23 #5mph
+	#connectMyCopter()
+	#vehicle.airspeed=2.23 #5mph
 	#arm_and_takeoff(seekingalt)
 	#time.sleep(1)
 	#goto(0)
 
 	while True:
 		subscriber()
+		print("ran subscriber")
 		if interrupt == True:
 			break
 		if flush == 1:
