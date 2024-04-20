@@ -64,7 +64,7 @@ targsleft = 3
 index = 0
 time_last_seen=0
 
-app = Flask(__name__)
+#app = Flask(__name__)
 
 horizontal_res = 1536
 vertical_res = 864
@@ -577,15 +577,15 @@ def subscriber():
     if flush == 1: #and time.time()-flush_time >3:dddd
         #sub.unregister()
         return None
-    ret,buffer = cv.imencode('.jpg', frame)
-    frame = buffer.tobytes()
-    yield (b'--frame\r\n'
-           b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+    #ret,buffer = cv.imencode('.jpg', frame)
+   # frame = buffer.tobytes()
+    #yield (b'--frame\r\n'
+          # b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
     return None
 
-@app.route('/video_feed')
-def video_feed():
-    	return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+#@app.route('/video_feed')
+#def video_feed():
+    	#return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 def interrupt():
@@ -653,7 +653,7 @@ def interrupt():
 
 
 if __name__=='__main__':
-    app.run(host='0.0.0.0', port=5000)
+    #app.run(host='0.0.0.0', port=5000)
 ###Variables
     vehicle.airspeed=2.23 #5mph
 
