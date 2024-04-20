@@ -655,7 +655,7 @@ def interrupt():
 if __name__=='__main__':
     #app.run(host='0.0.0.0', port=5000)
 ###Variables
-    vehicle.airspeed=2.23 #5mph
+    
 
     interruptor = Thread(target=interrupt)
     interruptor.start()
@@ -663,6 +663,7 @@ if __name__=='__main__':
 
     try:
         connectMyCopter()
+	vehicle.airspeed=2.23 #5mph
         arm_and_takeoff(seekingalt)
         time.sleep(1)
         goto(0)
