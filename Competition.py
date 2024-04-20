@@ -600,7 +600,7 @@ def interrupt():
 	
 	
 		for _ in range(1):
-			uinput = raw_input()
+			uinput = input()
 	
 	
 		if uinput == "o":
