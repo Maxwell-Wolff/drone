@@ -8,7 +8,6 @@ import sys
 import time
 import math
 import numpy as np
-import ros_numpy as rnp
 from dronekit import connect, VehicleMode, LocationGlobalRelative, LocationGlobal
 from pymavlink import mavutil
 from pymavlink.dialects.v20 import common
@@ -584,58 +583,67 @@ def video_feed():
 
 
 def interrupt():
-    global interrupt, Kill_Interrupt, last_refresh_time, refresh_time
-    refresh = 0
-    first = True
-    while True:
+	global interrupt, Kill_Interrupt, last_refresh_time, refresh_time
+	refresh = 0
+	first = True
+	while True:
 
-        if first == True:
-            print("\nENTER 'Q' for Emergency LAND\nENTER 'W' to KILL Motors\nENTER 'E' to exit\nENTER 'NULL' for Vehicle Status\nENTER 'O' for OPTIONS\n\n")
-            first = False
-
-
-        for _ in range(1):
-            uinput = raw_input()
-
-
-        if uinput == "o":
-            print("\nENTER 'Q' for Emergency LAND\nENTER 'W' to KILL Motors\nENTER 'E' to exit\nENTER 'NULL' for Vehicle Status\nENTER 'O' for OPTIONS")
-
-        if uinput == "q":
-            interrupt = True
-            print("\n\nEMERGENCY LAND")
-            Land()
-
-        if uinput == "w":
-            interrupt = True
-            Kill_Interrupt == True
-            print("\n\nKILLING MOTORS")
-            msg = vehicle.message_factory.command_long_encode(
-            0,0, #target system, target component
-            common.MAV_CMD_DO_FLIGHTTERMINATION, #command
-            0, #confirmationlast_refresh_time=0
-            1, #param 1
-            0,0,0, #unused params
-            0,0,0)
-            vehicle.send_mavlink(msg)
-
-        if uinput =="e":
-            interrupt = True
-            print("Exiting")
-            vehicle.close
-            exit()
-
-        if uinput == "":
-            print("\n#####VEHICLE STATUS#####")
-            mode=vehicle.mode.name
-            if vehicle.armed==True:
-                print("Vehicle Armed")
-            if vehicle.armed==False:
-                print("Vehicle Disarmed")
-            print("MODE:", end = " ")
-            print(vehicle.mode.name)
-            if vehicle.armed==False and first==False:
-                print("ENTER 'E' to exit\n\n")
+		if first == True:
+			print("\nENTER 'Q' for Emergency LAND\nENTER 'W' to KILL Motors\nENTER 'E' to exit\nENTER 'R' to Return to Launch\nENTER 'NULL' for Vehicle Status\nENTER 'O' for OPTIONS\n\n")
+			first = False
+	
+	
+		for _ in range(1):
+			uinput = raw_input()
+	
+	
+		if uinput == "o":
+			print("\nENTER 'Q' for Emergency LAND\nENTER 'W' to KILL Motors\nENTER 'E' to exit\nENTER 'R' to Return to Launch\nENTER 'NULL' for Vehicle Status\nENTER 'O' for OPTIONS\n\n")
+	
+		if uinput == "q":
+			interrupt = True
+			print("\n\nEMERGENCY LAND")
+			Land()
+	
+		if uinput == "w":
+			interrupt = True
+			Kill_Interrupt == True
+			print("\n\nKILLING MOTORS")
+			msg = vehicle.message_factory.command_long_encode(
+			0,0, #target system, target component
+			common.MAV_CMD_DO_FLIGHTTERMINATION, #command
+			0, #confirmationlast_refresh_time=0
+			1, #param 1
+			0,0,0, #unused params
+			0,0,0)
+			vehicle.send_mavlink(msg)
+	
+		if uinput =="e":
+			interrupt = True
+			print("Exiting")
+			vehicle.close
+			exit()
+	
+		if uinput =="r":
+			interrupt = True
+			print("Return to Launch!")
+			vehicle.mode = VehicleMode("RTL")
+			while vehicle.armed:
+				time.sleep(1)
+		    	vehicle.close
+			exit()
+	
+		if uinput == "":
+			print("\n#####VEHICLE STATUS#####")
+			mode=vehicle.mode.name
+			if vehicle.armed==True:
+				print("Vehicle Armed")
+			if vehicle.armed==False:
+				print("Vehicle Disarmed")
+				print("MODE:", end = " ")
+				print(vehicle.mode.name)
+			if vehicle.armed==False and first==False:
+				print("ENTER 'E' to exit\n\n")
 
 
 if __name__=='__main__':
@@ -646,9 +654,6 @@ if __name__=='__main__':
     interruptor = Thread(target=interrupt)
     interruptor.start()
     codeinit=1
-
-    # whereineedtobe = Thread(target=WHEREINEEDTOBE)
-    # whereineedtobe.start()
 
     try:
         connectMyCopter()
