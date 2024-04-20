@@ -653,37 +653,31 @@ def interrupt():
 
 
 if __name__=='__main__':
-    #app.run(host='0.0.0.0', port=5000)
+	#app.run(host='0.0.0.0', port=5000)
 ###Variables
     
+	interruptor = Thread(target=interrupt)
+	interruptor.start()
+	codeinit=1
 
-    interruptor = Thread(target=interrupt)
-    interruptor.start()
-    codeinit=1
-
-    try:
-        connectMyCopter()
+	connectMyCopter()
 	vehicle.airspeed=2.23 #5mph
-        arm_and_takeoff(seekingalt)
-        time.sleep(1)
-        goto(0)
+	arm_and_takeoff(seekingalt)
+	time.sleep(1)
+	goto(0)
 
-        while True:
-            if interrupt == True:
-                break
-            if flush == 1:
-                flush=0
-                dummy_yaw_initializer(True,seekingalt)
-                time.sleep(3)
-                just_flushed=1
-                goto(0)
+	while True:
+		if interrupt == True:
+			break
+		if flush == 1:
+			flush=0
+			dummy_yaw_initializer(True,seekingalt)
+			time.sleep(3)
+			just_flushed=1
+			goto(0)
 
                 # lat_home=-35.3632609#vehicle.location.global_relative_frame.lat
                 # lon_home=149.1652352#vehicle.location.global_relative_frame.lon
                 # wp_home=LocationGlobalRelative(lat_home,lon_home,5)
                 # wp1=LocationGlobalRelative(-35.36303741,149.1652374,5)
                 # wp2=LocationGlobalRelative(lat_home-0.00022349,lon_home-0.0000022,5)
-
-
-    except rospy.ROSInterruptException:
-        pass
