@@ -460,7 +460,7 @@ def subscriber():
         timetosee=0
 
     id_to_find=ids_to_find[index]
-
+    print("Looking for:",alias[index])
     
     frame = picam2.capture_array("main")
     gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
