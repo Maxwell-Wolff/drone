@@ -60,7 +60,7 @@ interrupt = 0
 Kill_Interrupt=0
 ########################
 fire_init_time=0
-ids_to_find = [1, 2, 3, 72]#72 ##arucoID
+ids_to_find = [16, 17, 18, 19]#72 ##arucoID
 targsleft = 3
 index = 0
 time_last_seen=0
