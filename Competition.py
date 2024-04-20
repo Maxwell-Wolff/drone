@@ -465,13 +465,14 @@ def subscriber():
     frame = picam2.capture_array("main")
     gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     
-    vehicle.channels.overrides['8']=2000
+    
     ids = ''
     marker_corners, marker_IDs, reject = detector.detectMarkers(gray_frame)
 
     try:
         print("index:",index)
         if marker_corners:
+            #TODOvehicle.channels.overrides['8']=2000
             just_flushed=0
             AltCorrect(FiringAlt)
             rVec, tVec, _ = estimatePoseSingleMarkers(
