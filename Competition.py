@@ -470,7 +470,7 @@ def subscriber():
     marker_corners, marker_IDs, reject = detector.detectMarkers(gray_frame)
 
     try:
-        print("index:",index)
+        
         if marker_corners:
             #TODOvehicle.channels.overrides['8']=2000
             just_flushed=0
@@ -489,7 +489,7 @@ def subscriber():
                 top_left = corners[1].ravel()
                 bottom_right = corners[2].ravel()
                 bottom_left = corners[3].ravel()
-                
+                print("FOUND:",alias[index])
                 x = round(tVec[i][0][0],1)
                 y = round(tVec[i][1][0],1)
                 z = np.sqrt(tVec[i][0][2] ** 2 + tVec[i][0][0] ** 2 + tVec[i][0][1] ** 2)
@@ -662,8 +662,8 @@ if __name__=='__main__':
 	interruptor.start()
 	codeinit=1
 
-	#connectMyCopter()
-	#vehicle.airspeed=2.23 #5mph
+	connectMyCopter()
+	vehicle.airspeed=2.23 #5mph
 	#arm_and_takeoff(seekingalt)
 	#time.sleep(1)
 	#goto(0)
