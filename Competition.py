@@ -629,7 +629,7 @@ def interrupt():
 			interrupt = True
 			print("Exiting")
 			#vehicle.close
-			exit()
+			sys.exit()
 	
 		if uinput =="r":
 			interrupt = True
