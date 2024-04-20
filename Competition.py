@@ -131,11 +131,11 @@ def connectMyCopter():
 	vehicle.parameters['PLND_TYPE']=1
 	vehicle.parameters['PLND_EST_TYPE']=0
 	time.sleep(1)
-	vehicle.parameters['CH8_OPT']=39
-	vehicle.parameters['CH7_OPT']=0
-	vehicle.parameters['CH9_OPT']=0
-	vehicle.parameters['CH10_OPT']=0
-	vehicle.parameters['CH11_OPT']=0
+	vehicle.parameters['RC8_OPTION']=39
+	vehicle.parameters['RC7_OPTION']=0
+	vehicle.parameters['RC9_OPTION']=0
+	vehicle.parameters['RC10_OPTION']=0
+	vehicle.parameters['RC11_OPTION']=0
 	vehicle.channels.overrides['3']=0
 	return vehicle
 
