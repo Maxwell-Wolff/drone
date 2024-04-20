@@ -634,7 +634,7 @@ def interrupt():
 			vehicle.mode = VehicleMode("RTL")
 			while vehicle.armed:
 				time.sleep(1)
-		    	vehicle.close
+		    	vehicle.close()
 			exit()
 	
 		if uinput == "":
