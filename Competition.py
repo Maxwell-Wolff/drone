@@ -508,17 +508,17 @@ def subscriber():
                 print("Y_Ang:",y_ang)
                 print("\n\n")
 
-                if vehicle.mode !='LOITER':
-                    vehicle.mode = VehicleMode('LOITER')
-                    while vehicle.mode !='LOITER':
+                #if vehicle.mode !='LOITER':
+                    #vehicle.mode = VehicleMode('LOITER')
+                    #while vehicle.mode !='LOITER':
                             time.sleep(1)
-                    track(x_ang,y_ang)
-                    tracking=True
-                    ugh=0
-                else:
-                    track(x_ang,y_ang)
-                    tracking=True
-                    ugh=0
+                    #track(x_ang,y_ang)
+                    #tracking=True
+                    #ugh=0
+                #else:
+                    #track(x_ang,y_ang)
+                    #tracking=True
+                    #ugh=0
 
                 marker_position = 'MARKER POSITION: x='+x+' y='+y+' z='+z
 
@@ -670,7 +670,6 @@ if __name__=='__main__':
 
 	while True:
 		subscriber()
-		print("ran subscriber")
 		if interrupt == True:
 			break
 		if flush == 1:
