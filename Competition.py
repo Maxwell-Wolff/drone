@@ -36,7 +36,7 @@ GPIO.setup(gpfire, GPIO.OUT)
 GPIO.output(gpfire, GPIO.LOW)
 
 velocity=-.5 #m/s
-seekingalt=5 #m
+seekingalt=2 #m
 FiringAlt=2
 fire_time = 1
 init = 0
@@ -54,8 +54,12 @@ flush=0
 flush_time=0
 just_flushed=0
 
+wp1 = LocationGlobalRelative(28.8649019,-82.5127223,2)
+wp2 = LocationGlobalRelative(28.8649479,-82.5121833,2)
+wp3 = LocationGlobalRelative(28.8648316,-82.5127111,2)
+wp4 = LocationGlobalRelative(28.8648673,-82.5121852,2)
 
-waypoints= #TODO
+waypoints=[wp1,wp2,wp3,wp4]
 
 wpinit_time=0
 codeinit=0
