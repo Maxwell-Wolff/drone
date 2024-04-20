@@ -18,16 +18,7 @@ from threading import Thread
 from datetime import datetime
 import pytz
 #######VARIABLES########
-vehicle.parameters['PLND_ENABLED']=2
-vehicle.parameters['PLND_TYPE']=1
-vehicle.parameters['PLND_EST_TYPE']=0
-time.sleep(1)
-vehicle.parameters['CH8_OPT']=39
-vehicle.parameters['CH7_OPT']=0
-vehicle.parameters['CH9_OPT']=0
-vehicle.parameters['CH10_OPT']=0
-vehicle.parameters['CH11_OPT']=0
-vehicle.channels.overrides['3']=0
+
 
 gpfire = 17
 GPIO.setmode(GPIO.BCM)
@@ -126,14 +117,24 @@ refresh_time=10
 ################FUNCTIONS###############
 
 def connectMyCopter():
-        parser = argparse.ArgumentParser(description='commands')
-        parser.add_argument('--connect')
-        args = parser.parse_args()
+	parser = argparse.ArgumentParser(description='commands')
+	parser.add_argument('--connect')
+	args = parser.parse_args()
 
-        connection_string = args.connect
-        baud_rate = 57600
+	connection_string = args.connect
+	baud_rate = 57600
 
-        vehicle = connect(connection_string,baud=baud_rate) #,wait_ready=True)
+	vehicle = connect(connection_string,baud=baud_rate) #,wait_ready=True)
+	vehicle.parameters['PLND_ENABLED']=2
+	vehicle.parameters['PLND_TYPE']=1
+	vehicle.parameters['PLND_EST_TYPE']=0
+	time.sleep(1)
+	vehicle.parameters['CH8_OPT']=39
+	vehicle.parameters['CH7_OPT']=0
+	vehicle.parameters['CH9_OPT']=0
+	vehicle.parameters['CH10_OPT']=0
+	vehicle.parameters['CH11_OPT']=0
+	vehicle.channels.overrides['3']=0
         return vehicle
 
 
