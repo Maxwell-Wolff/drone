@@ -574,7 +574,7 @@ def subscriber():
    # frame = buffer.tobytes()
     #yield (b'--frame\r\n'
           # b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-	goto(0)
+	#goto(0)
 	return None
 
 #@app.route('/video_feed')
@@ -670,7 +670,7 @@ if __name__=='__main__':
 			dummy_yaw_initializer(True,seekingalt)
 			time.sleep(3)
 			just_flushed=1
-			goto(0)
+			#goto(0)
 
                 # lat_home=-35.3632609#vehicle.location.global_relative_frame.lat
                 # lon_home=149.1652352#vehicle.location.global_relative_frame.lon
