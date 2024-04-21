@@ -6,6 +6,7 @@ import math
 import argparse
 import os
 import sys
+from pymavlink.dialects.v20 import common
 
 def connectMyCopter():
         parser = argparse.ArgumentParser(description='commands')
@@ -40,9 +41,9 @@ if __name__ == "__main__":
   vehicle = connectMyCopter()
   arm()
   vehicle.channels.overrides['3'] = 0
-  time.sleep(2)
-  vehicle.channels.overrides['3'] = 1350
-  time.sleep(2)
+  time.sleep(0.5)
+  vehicle.channels.overrides['3'] = 0
+  time.sleep(1)
   msg = vehicle.message_factory.command_long_encode(
 			0,0, #target system, target component
 			common.MAV_CMD_DO_FLIGHTTERMINATION, #command
