@@ -624,7 +624,7 @@ def interrupt():
 		if uinput =="e":
 			interrupt = True
 			print("Exiting")
-			#vehicle.close
+			vehicle.close
 			sys.exit()
 	
 		if uinput =="r":
@@ -653,11 +653,12 @@ if __name__=='__main__':
 	#app.run(host='0.0.0.0', port=5000)
 ###Variables
     
-	interruptor = Thread(target=interrupt)
-	interruptor.start()
+	
 	codeinit=1
 
 	vehicle = connectMyCopter()
+	interruptor = Thread(target=interrupt)
+	interruptor.start()
 	vehicle.airspeed=2.23 #5mph
 	arm_and_takeoff(2)
 	time.sleep(1)
