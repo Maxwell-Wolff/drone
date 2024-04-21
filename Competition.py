@@ -362,7 +362,7 @@ def track(x,y):
                 #send_local_ned_velocity(0.3,0.3,0)
                 #time_taken=0
                 #MARK NOT A TARGET HERE RETURN RESUME SIGNAL
-	vehicle.send_mavlink(msg)
+	#vehicle.send_mavlink(msg)
     #vehicle.flush()
 	subscriber()
 
@@ -387,8 +387,8 @@ def fire(): #TODO: Fire logic
 	global fire_time, ids_to_find, targsleft, id_to_find, index, sub, flush, flush_time, Fire
 	initial_time=time.time()
 	timestamp = datetime.now(pytz.utc).isoformat().replace("+00:00","Z")
-	Lat = vehicle.location.global_relative_frame.lat
-	Lon = vehicle.location.global_relative_frame.lon
+	#Lat = vehicle.location.global_relative_frame.lat
+	#Lon = vehicle.location.global_relative_frame.lon
 	id=id_to_find#:TODO
 	print("USF","UAV","WaterBlast!",id_to_find,timestamp,Lat,Lon,sep = "_")
 	GPIO.output(gpfire, GPIO.HIGH)
@@ -471,7 +471,7 @@ def subscriber():
 
 	try:
 		if marker_corners:
-			vehicle.channels.overrides['8']=2000
+			#vehicle.channels.overrides['8']=2000
 			just_flushed=0
 			AltCorrect(FiringAlt)
 			rVec, tVec, _ = estimatePoseSingleMarkers(
