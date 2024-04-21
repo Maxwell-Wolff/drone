@@ -543,7 +543,7 @@ def subscriber():
 				#)
         
                 
-				print("X:",X," Y:",Y)
+				print("X:",x," Y:",y)
 				print('FOUND COUNT: '+str(found_count)+ ' NOTFOUND COUNT: '+str(notfound_count))
                 
 				found_count = found_count + 1
