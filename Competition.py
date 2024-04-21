@@ -204,11 +204,7 @@ def goto(targetLocation):
     #while
     while vehicle.mode.name=="GUIDED":
         currentDistance = get_distance_meters(targetLocation,vehicle.location.global_relative_frame)
-    		# LOOK FOR MARKER() # TODO
-    		# if FOUND && STILL A TARGET:
-    		# 	DO TRACK()
-    		# 	DETERMINE WHERE I NEED TO BE()
-    		# 	GOTO(WHERE I NEED TO BE)
+    	
         if currentDistance<distanceToTargetLocation*.03:
             print("Reached waypoint.")
             if flush == 0:
@@ -347,27 +343,26 @@ def track(x,y):
         y,
         0,
         0,0,)
-    print(Fire)
     if Fire == False:
         if vehicle.location.global_relative_frame.alt/FiringAlt < 1.2 and vehicle.location.global_relative_frame.alt/FiringAlt > 0.8:
             if time_taken==0:
                 tracking_time=time.time()
                 time_taken=1
-            if x < 0.03 and x>-0.03 and y < 0.03 and y>-0.03:
+            if x < 0.2 and x>-0.2 and y < 0.2 and y>-0.2:
                 Fire = True
                 fire()
                 time.sleep(2)
                 return None
             print("TIMETAKEN:",tracking_time)
             if time.time()-tracking_time > 5:
-                #print("NUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGE")
+                print("NUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGE")
                 send_local_ned_velocity(0.3,0.3,0)
                 time_taken=0
                 #MARK NOT A TARGET HERE RETURN RESUME SIGNAL
-
-    #trigger()
+    
     vehicle.send_mavlink(msg)
     vehicle.flush()
+    subscriber()
 
 def AltCorrect(FiringAlt):
     if interrupt == True:
@@ -579,6 +574,7 @@ def subscriber():
    # frame = buffer.tobytes()
     #yield (b'--frame\r\n'
           # b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+	goto(0)
 	return None
 
 #@app.route('/video_feed')
