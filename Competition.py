@@ -624,7 +624,7 @@ def interrupt():
 		if uinput =="e":
 			interrupt = True
 			print("Exiting")
-			vehicle.close
+			#vehicle.close
 			sys.exit()
 	
 		if uinput =="r":
