@@ -667,8 +667,8 @@ if __name__=='__main__':
 		#subscriber()
 		if interrupt == True:
 			break
-		AltCorrect(2)
-		time.sleep(1)
+		#AltCorrect(2)
+		#time.sleep(1)
 		if flush == 1:
 			flush=0
 			dummy_yaw_initializer(True,seekingalt)
