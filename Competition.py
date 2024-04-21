@@ -482,12 +482,13 @@ def subscriber():
 				cv.polylines(
 				frame, [corners.astype(np.int32)], True, (0, 255, 255), 4, cv.LINE_AA
 				)
-				print("MADE IT HERE")
+				
 				corners = corners.reshape(4, 2)
 				corners = corners.astype(int)
 				top_right = corners[0].ravel()
 				top_left = corners[1].ravel()
 				bottom_right = corners[2].ravel()
+				print("MADE IT HERE")
 				bottom_left = corners[3].ravel()
 				x = round(tVec[i][0][0],1)
 				y = round(tVec[i][1][0],1)
