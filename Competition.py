@@ -483,7 +483,8 @@ def subscriber():
                 cv.polylines(
                     frame, [corners.astype(np.int32)], True, (0, 255, 255), 4, cv.LINE_AA
                 )
-                corners = corners.reshape(4, 2)
+		print("MADE IT HERE")
+		corners = corners.reshape(4, 2)
                 corners = corners.astype(int)
                 top_right = corners[0].ravel()
                 top_left = corners[1].ravel()
