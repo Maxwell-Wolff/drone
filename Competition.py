@@ -665,9 +665,13 @@ if __name__=='__main__':
 	#goto(0)
 
 	while True:
-		#subscriber()
 		if interrupt == True:
 			break
+		subscriber()
+		#if vehicle.mode !='LOITER':
+			#vehicle.mode = VehicleMode('LOITER')
+			#while vehicle.mode !='LOITER':
+			#time.sleep(1)
 		#AltCorrect(2)
 		#time.sleep(1)
 		if flush == 1:
