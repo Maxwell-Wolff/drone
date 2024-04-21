@@ -491,7 +491,6 @@ def subscriber():
 				bottom_left = corners[3].ravel()
 				x = round(tVec[i][0][0],1)
 				y = round(tVec[i][1][0],1)
-				print("MADE IT HERE")
 				y_sum=0
 				x_sum=0
 				
@@ -521,27 +520,27 @@ def subscriber():
 				marker_position = 'MARKER POSITION: x='+x+' y='+y+' z='+z
 				
 				point = cv.drawFrameAxes(frame, cam_mat, dist_coef, rVec[i], tVec[i], 4, 4)
-				cv.putText(
-					frame,
-					f"id: {alias[index]}",
-					top_right,
-					cv.FONT_HERSHEY_PLAIN,
-					1.3,
-					(0, 0, 255),
-					2,
-					cv.LINE_AA,
-				)
+				#cv.putText(
+					#frame,
+					#f"id: {alias[index]}",
+					#top_right,
+					#cv.FONT_HERSHEY_PLAIN,
+					#1.3,
+					#(0, 0, 255),
+					#2,
+					#cv.LINE_AA,
+				#)
 				print("made it HERE")
-				cv.putText(
-					frame,
-					f"x:{round(tVec[i][0][0],1)} y: {round(tVec[i][1][0],1)} ",
-					bottom_right,
-					cv.FONT_HERSHEY_PLAIN,
-					1.0,
-					(0, 0, 255),
-					2,
-					cv.LINE_AA,
-				)
+				#cv.putText(
+					#frame,
+					#f"x:{round(tVec[i][0][0],1)} y: {round(tVec[i][1][0],1)} ",
+					#bottom_right,
+					#cv.FONT_HERSHEY_PLAIN,
+					#1.0,
+					#(0, 0, 255),
+					#2,
+					#cv.LINE_AA,
+				#)
         
                 
 				print(marker_position)
