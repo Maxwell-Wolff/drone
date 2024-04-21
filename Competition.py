@@ -387,8 +387,8 @@ def fire(): #TODO: Fire logic
 	global fire_time, ids_to_find, targsleft, id_to_find, index, sub, flush, flush_time, Fire
 	initial_time=time.time()
 	timestamp = datetime.now(pytz.utc).isoformat().replace("+00:00","Z")
-	#Lat = vehicle.location.global_relative_frame.lat
-	#Lon = vehicle.location.global_relative_frame.lon
+	Lat = vehicle.location.global_relative_frame.lat
+	Lon = vehicle.location.global_relative_frame.lon
 	id=id_to_find#:TODO
 	print("USF","UAV","WaterBlast!",id_to_find,timestamp,Lat,Lon,sep = "_")
 	GPIO.output(gpfire, GPIO.HIGH)
