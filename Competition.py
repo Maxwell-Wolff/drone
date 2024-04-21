@@ -662,7 +662,7 @@ if __name__=='__main__':
 
 	while True:
 		#subscriber()
-		#AltCorrect(2)
+		AltCorrect(2)
 		if interrupt == True:
 			break
 		if flush == 1:
