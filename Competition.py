@@ -332,36 +332,39 @@ def dummy_yaw_initializer(gps,altgiven):
 
 
 def track(x,y):
-    if interrupt == True:
-        return None
-    global Fire, tracking_time,time_taken
-    msg = vehicle.message_factory.landing_target_encode(
-        0,
-        0,
-        mavutil.mavlink.MAV_FRAME_BODY_OFFSET_NED,
-        x,
-        y,
-        0,
-        0,0,)
-    if Fire == False:
-        if vehicle.location.global_relative_frame.alt/FiringAlt < 1.2 and vehicle.location.global_relative_frame.alt/FiringAlt > 0.8:
-            if time_taken==0:
-                tracking_time=time.time()
-                time_taken=1
-            if x < 0.2 and x>-0.2 and y < 0.2 and y>-0.2:
-                Fire = True
-                fire()
-                time.sleep(2)
-                return None
-            print("TIMETAKEN:",tracking_time)
-            if time.time()-tracking_time > 5:
-                print("NUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGE")
-                send_local_ned_velocity(0.3,0.3,0)
-                time_taken=0
+	global Fire, tracking_time,time_taken
+	if interrupt == True:
+		return None
+	msg = vehicle.message_factory.landing_target_encode(
+		0,
+		0,
+		mavutil.mavlink.MAV_FRAME_BODY_OFFSET_NED,
+		x,
+		y,
+		0,
+		0,0,)
+	if x < 0.2 and x>-0.2 and y < 0.2 and y>-0.2:
+		print("FIRE FIRE FIRE FIRE FIRE")
+	
+    #if Fire == False:
+        #if vehicle.location.global_relative_frame.alt/FiringAlt < 1.2 and vehicle.location.global_relative_frame.alt/FiringAlt > 0.8:
+            #if time_taken==0:
+                #tracking_time=time.time()
+                #time_taken=1
+            #if x < 0.2 and x>-0.2 and y < 0.2 and y>-0.2:
+                #Fire = True
+                #fire()
+                #time.sleep(2)
+                #return None
+            #print("TIMETAKEN:",tracking_time)
+            #if time.time()-tracking_time > 5:
+                #print("NUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGENUDGE")
+                #send_local_ned_velocity(0.3,0.3,0)
+                #time_taken=0
                 #MARK NOT A TARGET HERE RETURN RESUME SIGNAL
     
     vehicle.send_mavlink(msg)
-    vehicle.flush()
+    #vehicle.flush()
     subscriber()
 
 def AltCorrect(FiringAlt):
@@ -505,16 +508,16 @@ def subscriber():
 					print("Y_Ang:",y_ang)
 					print("\n\n")
 					
-					#if vehicle.mode !='LOITER':
-						#vehicle.mode = VehicleMode('LOITER')
-						#while vehicle.mode !='LOITER':
-						#time.sleep(1)
-						#track(x_ang,y_ang)
-						#tracking=True
+					if vehicle.mode !='LOITER':
+						vehicle.mode = VehicleMode('LOITER')
+						while vehicle.mode !='LOITER':
+						time.sleep(1)
+						track(x_ang,y_ang)
+						tracking=True
 						#ugh=0
-					#else:
-						#track(x_ang,y_ang)
-						#tracking=True
+					else:
+						track(x_ang,y_ang)
+						tracking=True
 						#ugh=0
 					
 				
@@ -669,10 +672,10 @@ if __name__=='__main__':
 		if interrupt == True:
 			break
 		subscriber()
-		if vehicle.mode !='LOITER':
-			vehicle.mode = VehicleMode('LOITER')
-			while vehicle.mode !='LOITER':
-				time.sleep(1)
+		#if vehicle.mode !='LOITER':
+			#vehicle.mode = VehicleMode('LOITER')
+			#while vehicle.mode !='LOITER':
+				#time.sleep(1)
 		#AltCorrect(2)
 		#time.sleep(1)
 		if flush == 1:
