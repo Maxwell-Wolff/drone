@@ -471,7 +471,7 @@ def subscriber():
 
 	try:
 		if marker_corners:
-			#TODOvehicle.channels.overrides['8']=2000
+			vehicle.channels.overrides['8']=2000
 			just_flushed=0
 			AltCorrect(FiringAlt)
 			rVec, tVec, _ = estimatePoseSingleMarkers(
