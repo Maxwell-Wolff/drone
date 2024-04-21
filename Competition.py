@@ -661,7 +661,7 @@ if __name__=='__main__':
 	#goto(0)
 
 	while True:
-		subscriber()
+		#subscriber()
 		#AltCorrect(2)
 		if interrupt == True:
 			break
