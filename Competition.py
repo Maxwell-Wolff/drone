@@ -552,11 +552,11 @@ def subscriber():
 					found = True
 	
 					time_last_seen=time.time()
-			else:
-				notfound_count=notfound_count+1
-				if time.time()- time_last_seen > timetosee:
-					index = index+1
-					tracking = False
+				else:
+					notfound_count=notfound_count+1
+					if time.time()- time_last_seen > timetosee:
+						index = index+1
+						tracking = False
 		else:
 			notfound_count=notfound_count+1
 			if time.time()- time_last_seen > timetosee:
