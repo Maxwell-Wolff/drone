@@ -656,7 +656,7 @@ if __name__=='__main__':
 
 	vehicle = connectMyCopter()
 	vehicle.airspeed=2.23 #5mph
-	arm_and_takeoff(seekingalt)
+	arm_and_takeoff(2)
 	time.sleep(1)
 	#goto(0)
 
