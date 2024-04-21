@@ -470,7 +470,7 @@ def subscriber():
 	marker_corners, marker_IDs, reject = detector.detectMarkers(gray_frame)
 
 	try:
-		if marker_corners:
+		if marker_IDs[0]==id_to_find:
 			#TODOvehicle.channels.overrides['8']=2000
 			just_flushed=0
 			AltCorrect(FiringAlt)
