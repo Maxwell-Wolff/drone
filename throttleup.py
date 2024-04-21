@@ -51,7 +51,7 @@ if __name__ == "__main__":
 			0,0,0, #unused params
 			0,0,0)
   vehicle.send_mavlink(msg)
-  vehicle.channels.overrrides['3']=0
+  #vehicle.channels.overrrides['3']=0
  # vehicle.channels.overrides['3'] = 1500
  # time.sleep(2)
  # vehicle.channels.overrides['3'] = 1650
