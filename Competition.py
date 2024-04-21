@@ -29,7 +29,7 @@ GPIO.setup(gpfire, GPIO.OUT)
 GPIO.output(gpfire, GPIO.LOW)
 
 velocity=-.5 #m/s
-seekingalt=2 #m
+seekingalt=1 #m
 FiringAlt=2
 fire_time = 1
 init = 0
@@ -655,13 +655,14 @@ if __name__=='__main__':
 	codeinit=1
 
 	vehicle = connectMyCopter()
-	#vehicle.airspeed=2.23 #5mph
-	#arm_and_takeoff(seekingalt)
-	#time.sleep(1)
+	vehicle.airspeed=2.23 #5mph
+	arm_and_takeoff(seekingalt)
+	time.sleep(1)
 	#goto(0)
 
 	while True:
 		subscriber()
+		AltCorrect(2)
 		if interrupt == True:
 			break
 		if flush == 1:
