@@ -40,8 +40,8 @@ if __name__ == "__main__":
 	try:
 		vehicle = connectMyCopter()
 		arm()
-		vehicle.channels.overrides['3'] = 0
-		#time.sleep(0.5)
+		vehicle.channels.overrides['3'] = 10
+		#time.sleep(3)
 		#vehicle.channels.overrides['3'] = 0
 		time.sleep(1)
 		#vehicle.channels.overrrides['3']=0
