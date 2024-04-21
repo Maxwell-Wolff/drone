@@ -662,7 +662,7 @@ if __name__=='__main__':
 	interruptor.start()
 	codeinit=1
 
-	connectMyCopter()
+	vehicle = connectMyCopter()
 	vehicle.airspeed=2.23 #5mph
 	#arm_and_takeoff(seekingalt)
 	#time.sleep(1)
