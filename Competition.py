@@ -488,12 +488,11 @@ def subscriber():
 				top_right = corners[0].ravel()
 				top_left = corners[1].ravel()
 				bottom_right = corners[2].ravel()
-				print("MADE IT HERE")
 				bottom_left = corners[3].ravel()
 				x = round(tVec[i][0][0],1)
 				y = round(tVec[i][1][0],1)
 				z = np.sqrt(tVec[i][0][2] ** 2 + tVec[i][0][0] ** 2 + tVec[i][0][1] ** 2)
-
+				print("MADE IT HERE")
 				y_sum=0
 				x_sum=0
 				
