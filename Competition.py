@@ -335,17 +335,17 @@ def track(x,y):
 	global Fire, tracking_time,time_taken
 	if interrupt == True:
 		return None
-	msg = vehicle.message_factory.landing_target_encode(
-		0,
-		0,
-		mavutil.mavlink.MAV_FRAME_BODY_OFFSET_NED,
-		x,
-		y,
-		0,
-		0,0,)
+	#msg = vehicle.message_factory.landing_target_encode(
+		#0,
+		#0,
+		#mavutil.mavlink.MAV_FRAME_BODY_OFFSET_NED,
+		#x,
+		#y,
+		#0,
+		#0,0,)
 	if x < 0.2 and x>-0.2 and y < 0.2 and y>-0.2:
 		print("FIRE FIRE FIRE FIRE FIRE")
-	
+		fire()
     #if Fire == False:
         #if vehicle.location.global_relative_frame.alt/FiringAlt < 1.2 and vehicle.location.global_relative_frame.alt/FiringAlt > 0.8:
             #if time_taken==0:
@@ -389,12 +389,12 @@ def fire(): #TODO: Fire logic
 	timestamp = datetime.now(pytz.utc).isoformat().replace("+00:00","Z")
 	Lat = vehicle.location.global_relative_frame.lat
 	Lon = vehicle.location.global_relative_frame.lon
-	id=72#:TODO
+	id=id_to_find#:TODO
 	print("USF","UAV","WaterBlast!",id_to_find,timestamp,Lat,Lon,sep = "_")
 	GPIO.output(gpfire, GPIO.HIGH)
 
 	while True:
-		subscriber()
+		#subscriber()
 		if time.time()-initial_time > fire_time:
 			GPIO.output(gpfire, GPIO.LOW)
 			Fire = False
@@ -403,14 +403,14 @@ def fire(): #TODO: Fire logic
 			ids_to_find.remove(id_to_find)
 			break
 
-	vehicle.mode = VehicleMode('GUIDED')
-	while vehicle.mode != VehicleMode('GUIDED'):
-		time.sleep(1)
+	#vehicle.mode = VehicleMode('GUIDED')
+	#while vehicle.mode != VehicleMode('GUIDED'):
+		#time.sleep(1)
 	print("ENDFIRE")
 	flush=1
-	flush_time=time.time()
+	#flush_time=time.time()
 	#dummy_yaw_initializer(True,seekingalt)
-	time.sleep(1)
+	#time.sleep(1)
 	return None
 
 
@@ -507,16 +507,16 @@ def subscriber():
 					print("Y_Ang:",y_ang)
 					print("\n\n")
 					
-					if vehicle.mode !='LOITER':
-						vehicle.mode = VehicleMode('LOITER')
-						while vehicle.mode !='LOITER':
-							time.sleep(1)
-						track(x_ang,y_ang)
-						tracking=True
+					#if vehicle.mode !='LOITER':
+						#vehicle.mode = VehicleMode('LOITER')
+						#while vehicle.mode !='LOITER':
+							#time.sleep(1)
+						#track(x_ang,y_ang)
+						#tracking=True
 						#ugh=0
-					else:
-						track(x_ang,y_ang)
-						tracking=True
+					#else:
+					track(x_ang,y_ang)
+						#tracking=True
 						#ugh=0
 					
 				
