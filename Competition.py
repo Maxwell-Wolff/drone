@@ -520,8 +520,8 @@ def subscriber():
 					#ugh=0
 				
 				marker_position = 'MARKER POSITION: x='+x+' y='+y+' z='+z
-
-                		point = cv.drawFrameAxes(frame, cam_mat, dist_coef, rVec[i], tVec[i], 4, 4)
+				
+				point = cv.drawFrameAxes(frame, cam_mat, dist_coef, rVec[i], tVec[i], 4, 4)
 				cv.putText(
 					frame,
 					f"id: {alias[int(str(ids[0]))-16]}",
