@@ -517,7 +517,7 @@ def subscriber():
 					#tracking=True
 					#ugh=0
 				
-				marker_position = 'MARKER POSITION: x='+x+' y='+y+''
+			
 				
 				point = cv.drawFrameAxes(frame, cam_mat, dist_coef, rVec[i], tVec[i], 4, 4)
 				cv.putText(
