@@ -531,7 +531,7 @@ def subscriber():
 					2,
 					cv.LINE_AA,
 				)
-                		print("made it HERE"
+				print("made it HERE")
 				cv.putText(
 					frame,
 					f"x:{round(tVec[i][0][0],1)} y: {round(tVec[i][1][0],1)} ",
