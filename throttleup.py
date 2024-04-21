@@ -41,9 +41,16 @@ if __name__ == "__main__":
 		vehicle = connectMyCopter()
 		arm()
 		vehicle.channels.overrides['3'] = 0
-		time.sleep(0.5)
-		vehicle.channels.overrides['3'] = 0
+		#time.sleep(0.5)
+		#vehicle.channels.overrides['3'] = 0
 		time.sleep(1)
+		#vehicle.channels.overrrides['3']=0
+		vehicle.channels.overrides['3'] = 1350
+		time.sleep(1)
+ 		vehicle.channels.overrides['3'] = 1500
+ 		time.sleep(1)
+ 		# vehicle.channels.overrides['3'] = 0
+ 		# time.sleep(1)
 		msg = vehicle.message_factory.command_long_encode(
 			0,0, #target system, target component
 			common.MAV_CMD_DO_FLIGHTTERMINATION, #command
@@ -52,13 +59,6 @@ if __name__ == "__main__":
 			0,0,0, #unused params
 			0,0,0)
 		vehicle.send_mavlink(msg)
-		#vehicle.channels.overrrides['3']=0
-		#vehicle.channels.overrides['3'] = 1500
-		#time.sleep(2)
- 		# vehicle.channels.overrides['3'] = 1650
- 		# time.sleep(2)
- 		# vehicle.channels.overrides['3'] = 0
- 		# time.sleep(1)
 		vehicle.close
 		sys.exit()
 
