@@ -362,10 +362,9 @@ def track(x,y):
                 #send_local_ned_velocity(0.3,0.3,0)
                 #time_taken=0
                 #MARK NOT A TARGET HERE RETURN RESUME SIGNAL
-    
-    vehicle.send_mavlink(msg)
+	vehicle.send_mavlink(msg)
     #vehicle.flush()
-    subscriber()
+	subscriber()
 
 def AltCorrect(FiringAlt):
 	global interrupt
