@@ -583,7 +583,7 @@ def subscriber():
 
 
 def interrupt():
-	global interrupt, Kill_Interrupt, last_refresh_time, refresh_time
+	global interrupt, Kill_Interrupt, last_refresh_time, vehicle, refresh_time
 	refresh = 0
 	first = True
 	while True:
