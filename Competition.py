@@ -365,18 +365,21 @@ def track(x,y):
     subscriber()
 
 def AltCorrect(FiringAlt):
-    if interrupt == True:
-        return None               #NEED TO ADJUST PWM SIGNAL TO WORK WITH VARIOUS ALTITUDES
-    if vehicle.location.global_relative_frame.alt < FiringAlt:
-        #vz = -0.3
-        vehicle.channels.overrides['3']=1650
-    if vehicle.location.global_relative_frame.alt > FiringAlt:
-        #vz = 0.3
-        vehicle.channels.overrides['3']=1350
-    if vehicle.location.global_relative_frame.alt/FiringAlt < 1.2 and vehicle.location.global_relative_frame.alt/FiringAlt > 0.8:
-        #vz = 0
-        vehicle.channels.overrides['3']=1500
-    return None
+	global interrupt
+	if interrupt == True:
+		return None               #NEED TO ADJUST PWM SIGNAL TO WORK WITH VARIOUS ALTITUDES
+	if vehicle.location.global_relative_frame.alt < FiringAlt:
+		vz = -0.3
+        #vehicle.channels.overrides['3']=1650
+	if vehicle.location.global_relative_frame.alt > FiringAlt:
+		vz = 0.3
+        #vehicle.channels.overrides['3']=1350
+	if vehicle.location.global_relative_frame.alt/FiringAlt < 1.2 and vehicle.location.global_relative_frame.alt/FiringAlt > 0.8:
+		vz = 0
+        #vehicle.channels.overrides['3']=1500
+
+	send_local_ned_velocity(0,0,vz)
+	return None
 
 def fire(): #TODO: Fire logic
 	global fire_time, ids_to_find, targsleft, id_to_find, index, sub, flush, flush_time, Fire
@@ -662,9 +665,9 @@ if __name__=='__main__':
 
 	while True:
 		#subscriber()
-		AltCorrect(2)
 		if interrupt == True:
 			break
+		AltCorrect(2)
 		if flush == 1:
 			flush=0
 			dummy_yaw_initializer(True,seekingalt)
