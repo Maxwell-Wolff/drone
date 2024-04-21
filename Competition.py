@@ -659,7 +659,7 @@ if __name__=='__main__':
 	
 	codeinit=1
 
-	#vehicle = connectMyCopter()
+	vehicle = connectMyCopter()
 	interruptor = Thread(target=interrupt)
 	interruptor.start()
 	#vehicle.airspeed=2.23 #5mph
