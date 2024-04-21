@@ -484,7 +484,7 @@ def subscriber():
 				)
 
 				if ids[0]==id_to_find:
-				
+					fire()
 					corners = corners.reshape(4, 2)
 					corners = corners.astype(int)
 					top_right = corners[0].ravel()
