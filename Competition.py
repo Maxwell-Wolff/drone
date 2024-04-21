@@ -671,7 +671,7 @@ if __name__=='__main__':
 		if vehicle.mode !='LOITER':
 			vehicle.mode = VehicleMode('LOITER')
 			while vehicle.mode !='LOITER':
-			time.sleep(1)
+				time.sleep(1)
 		#AltCorrect(2)
 		#time.sleep(1)
 		if flush == 1:
