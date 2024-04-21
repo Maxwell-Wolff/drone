@@ -471,7 +471,6 @@ def subscriber():
 
 	try:
 		if marker_corners:
-			print(marker_IDs)
 			#TODOvehicle.channels.overrides['8']=2000
 			just_flushed=0
 			AltCorrect(FiringAlt)
@@ -543,7 +542,7 @@ def subscriber():
 					#cv.LINE_AA,
 				#)
         
-                
+                		print("FOUND: ",alias[int(str(ids[0]))-16])
 				print("X:",x," Y:",y)
 				print('FOUND COUNT: '+str(found_count)+ ' NOTFOUND COUNT: '+str(notfound_count))
                 
