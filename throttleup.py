@@ -47,8 +47,8 @@ if __name__ == "__main__":
 		#vehicle.channels.overrrides['3']=0
 		vehicle.channels.overrides['3'] = 1350
 		time.sleep(1)
- 		vehicle.channels.overrides['3'] = 1500
- 		time.sleep(1)
+		vehicle.channels.overrides['3'] = 1500
+		time.sleep(1)
  		# vehicle.channels.overrides['3'] = 0
  		# time.sleep(1)
 		msg = vehicle.message_factory.command_long_encode(
