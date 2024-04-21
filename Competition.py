@@ -523,7 +523,7 @@ def subscriber():
 				point = cv.drawFrameAxes(frame, cam_mat, dist_coef, rVec[i], tVec[i], 4, 4)
 				cv.putText(
 					frame,
-					f"id: {alias[int(str(ids[0]))-16]}",
+					f"id: {alias[index]}",
 					top_right,
 					cv.FONT_HERSHEY_PLAIN,
 					1.3,
