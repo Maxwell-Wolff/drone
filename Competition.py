@@ -641,6 +641,7 @@ def interrupt():
 			mode=vehicle.mode.name
 			if vehicle.armed==True:
 				print("Vehicle Armed")
+				print("MODE: ",mode)
 			if vehicle.armed==False:
 				print("Vehicle Disarmed")
 				print("MODE:", end = " ")
