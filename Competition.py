@@ -659,12 +659,12 @@ if __name__=='__main__':
 	
 	codeinit=1
 
-	vehicle = connectMyCopter()
+	#vehicle = connectMyCopter()
 	interruptor = Thread(target=interrupt)
 	interruptor.start()
-	vehicle.airspeed=2.23 #5mph
-	arm_and_takeoff(2)
-	time.sleep(1)
+	#vehicle.airspeed=2.23 #5mph
+	#arm_and_takeoff(2)
+	#time.sleep(1)
 	#goto(0)
 
 	while True:
