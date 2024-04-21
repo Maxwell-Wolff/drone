@@ -473,7 +473,7 @@ def subscriber():
 		if marker_corners:
 			#vehicle.channels.overrides['8']=2000
 			just_flushed=0
-			AltCorrect(FiringAlt)
+			#AltCorrect(FiringAlt)
 			rVec, tVec, _ = estimatePoseSingleMarkers(
 			marker_corners, MARKER_SIZE, cam_mat, dist_coef
 			)
@@ -482,7 +482,7 @@ def subscriber():
 				cv.polylines(
 				frame, [corners.astype(np.int32)], True, (0, 255, 255), 4, cv.LINE_AA
 				)
-				print("SEEN:", alias[ids[0]])
+				print("SEEN:", alias[ids[0]-16])
 				if ids[0]==id_to_find:
 					fire()
 					corners = corners.reshape(4, 2)
