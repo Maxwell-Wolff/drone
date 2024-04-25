@@ -421,16 +421,16 @@ def AltCorrect(FiringAlt):
 	if interrupt == True:
 		return None               #NEED TO ADJUST PWM SIGNAL TO WORK WITH VARIOUS ALTITUDES
 	if vehicle.location.global_relative_frame.alt < FiringAlt:
-		#vz = -0.3
-		vehicle.channels.overrides['3']=1650
+		vz = -0.3
+		#vehicle.channels.overrides['3']=1650
 	if vehicle.location.global_relative_frame.alt > FiringAlt:
-		#vz = 0.3
-		vehicle.channels.overrides['3']=1350
+		vz = 0.3
+		#vehicle.channels.overrides['3']=1350
 	if vehicle.location.global_relative_frame.alt/FiringAlt < 1.2 and vehicle.location.global_relative_frame.alt/FiringAlt > 0.8:
-		#vz = 0
-		vehicle.channels.overrides['3']=1500
+		vz = 0
+		#vehicle.channels.overrides['3']=1500
 
-	#send_local_ned_velocity(0,0,vz)
+	send_local_ned_velocity(0,0,vz)
 	return None
 
 # Handles firing events: logging, trigger pull for set time, maintaining tracking.
@@ -722,11 +722,11 @@ if __name__=='__main__':
       while True:
         if interrupt == True:
           break
-        if vehicle.mode !='LOITER':
-          vehicle.mode = VehicleMode('LOITER')
-          while vehicle.mode !='LOITER':
-            time.sleep(1)
-        AltCorrect(2)
+        #if vehicle.mode !='LOITER':
+          #vehicle.mode = VehicleMode('LOITER')
+          #while vehicle.mode !='LOITER':
+            #time.sleep(1)
+        AltCorrect(2.5)
       #time.sleep(1)
       #if flush == 1:
         #flush=0
