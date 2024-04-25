@@ -129,29 +129,29 @@ refresh_time=10
 
 #Connect to AutoPilot
 def connectMyCopter():
-	parser = argparse.ArgumentParser(description='commands')
-	parser.add_argument('--connect')
-	args = parser.parse_args()
+  parser = argparse.ArgumentParser(description='commands')
+  parser.add_argument('--connect')
+  args = parser.parse_args()
 
-	connection_string = args.connect
-	baud_rate = 57600
+  connection_string = args.connect
+  baud_rate = 57600
 
   Print("Connecting...")
-	vehicle = connect(connection_string,baud=baud_rate) #,wait_ready=True)
-	
-	Print("Setting Parameters...")
-	vehicle.parameters['PLND_ENABLED']=2
-	vehicle.parameters['PLND_TYPE']=1
-	vehicle.parameters['PLND_EST_TYPE']=0
-	vehicle.parameters['RC8_OPTION']=39
-	vehicle.parameters['RC7_OPTION']=0
-	vehicle.parameters['RC9_OPTION']=0
-	vehicle.parameters['RC10_OPTION']=0
-	vehicle.parameters['RC11_OPTION']=0
-	vehicle.channels.overrides['3']=0
-	vehicle.airspeed= airspeed
-	
-	return vehicle
+  vehicle = connect(connection_string,baud=baud_rate) #,wait_ready=True)
+  
+  Print("Setting Parameters...")
+  vehicle.parameters['PLND_ENABLED']=2
+  vehicle.parameters['PLND_TYPE']=1
+  vehicle.parameters['PLND_EST_TYPE']=0
+  vehicle.parameters['RC8_OPTION']=39
+  vehicle.parameters['RC7_OPTION']=0
+  vehicle.parameters['RC9_OPTION']=0
+  vehicle.parameters['RC10_OPTION']=0
+  vehicle.parameters['RC11_OPTION']=0
+  vehicle.channels.overrides['3']=0
+  vehicle.airspeed= airspeed
+  
+  return vehicle
 
 #Arm and Take off to set seeking altitude
 def arm_and_takeoff(targetHeight):
@@ -266,7 +266,7 @@ def goto(targetLocation):
     #if tracking == False:
       #AltCorrect(seekingalt)
     subscriber()
-    if reached ==1:
+    #if reached ==1:
       #goto(0)
     #time.sleep(1)
 
@@ -385,16 +385,15 @@ def track(x,y):
 	global Fire, tracking_time,time_taken
 	if interrupt == True:
 		return None
-	#msg = vehicle.message_factory.landing_target_encode(
-		#0,
-		#0,
-		#mavutil.mavlink.MAV_FRAME_BODY_OFFSET_NED,
-		#x,
-		#y,
-		#0,
-		#0,0,)
+	msg = vehicle.message_factory.landing_target_encode(
+	  0,
+	  0,
+	  mavutil.mavlink.MAV_FRAME_BODY_OFFSET_NED,
+	  x,
+	  y,
+	  0,
+	  0,0,)
 	if x < 0.2 and x>-0.2 and y < 0.2 and y>-0.2:
-		print("FIRE FIRE FIRE FIRE FIRE")
 		fire()
     #if Fire == False:
         #if vehicle.location.global_relative_frame.alt/FiringAlt < 1.2 and vehicle.location.global_relative_frame.alt/FiringAlt > 0.8:
@@ -443,12 +442,14 @@ def fire(): #TODO: Fire logic
 	Lon = vehicle.location.global_relative_frame.lon
 	id=id_to_find#:TODO
 	print("USF","UAV","WaterBlast!",id_to_find,timestamp,Lat,Lon,sep = "_")
-	GPIO.output(gpfire, GPIO.HIGH)
+	print("Trigger Pull on ",alias[id_to_find-16],"!")
+	#GPIO.output(gpfire, GPIO.HIGH)
 
 	while True:
 		#subscriber()
 		if time.time()-initial_time > fire_time:
-			GPIO.output(gpfire, GPIO.LOW)
+			print("Trigger Release!")
+			#GPIO.output(gpfire, GPIO.LOW)
 			Fire = False
 			index=0
 			targsleft=targsleft-1
@@ -458,11 +459,13 @@ def fire(): #TODO: Fire logic
 	#vehicle.mode = VehicleMode('GUIDED')
 	#while vehicle.mode != VehicleMode('GUIDED'):
 		#time.sleep(1)
-	print("ENDFIRE")
-	flush=1
+	#flush=1
 	#flush_time=time.time()
 	#dummy_yaw_initializer(True,seekingalt)
 	#time.sleep(1)
+	#TODO: should be goto() here
+	#TODO: if ids_to_find is empty, RTL
+	subscriber()
 	return None
 
 # Given image from subscriber() do math to determine marker location, return rotation and translation vector arrays
@@ -518,31 +521,30 @@ def subscriber():
 				frame, [corners.astype(np.int32)], True, (0, 255, 255), 4, cv.LINE_AA
 				)
 				print("SEEN:", alias[ids[0]-16])
-				if ids[0]==id_to_find:
-					fire()
-					corners = corners.reshape(4, 2)
-					corners = corners.astype(int)
-					top_right = corners[0].ravel()
-					top_left = corners[1].ravel()
-					bottom_right = corners[2].ravel()
-					bottom_left = corners[3].ravel()
-					x = round(tVec[i][0][0],1)
-					y = round(tVec[i][1][0],1)
-					y_sum=0
-					x_sum=0
+	
+				corners = corners.reshape(4, 2)
+				corners = corners.astype(int)
+				top_right = corners[0].ravel()
+				top_left = corners[1].ravel()
+				bottom_right = corners[2].ravel()
+				bottom_left = corners[3].ravel()
+				x = round(tVec[i][0][0],1)
+				y = round(tVec[i][1][0],1)
+				y_sum=0
+				x_sum=0
 					
-					x_sum = marker_corners[0][0][0][0] + marker_corners[0][0][1][0] + marker_corners[0][0][2][0] +marker_corners[0][0][3][0]
-					y_sum = marker_corners[0][0][0][1] + marker_corners[0][0][1][1] + marker_corners[0][0][2][1] +marker_corners[0][0][3][1]
+				x_sum = marker_corners[0][0][0][0] + marker_corners[0][0][1][0] + marker_corners[0][0][2][0] +marker_corners[0][0][3][0]
+				y_sum = marker_corners[0][0][0][1] + marker_corners[0][0][1][1] + marker_corners[0][0][2][1] +marker_corners[0][0][3][1]
 					
-					x_avg = x_sum / 4
-					y_avg = y_sum / 4
-					x_ang = (x_avg - horizontal_res*.5)*horizontal_fov/horizontal_res
-					y_ang = (y_avg - vertical_res*.5)*vertical_fov/vertical_res
-					print("X_Ang:",x_ang)
-					print("Y_Ang:",y_ang)
-					print("\n\n")
+				x_avg = x_sum / 4
+				y_avg = y_sum / 4
+				x_ang = (x_avg - horizontal_res*.5)*horizontal_fov/horizontal_res
+				y_ang = (y_avg - vertical_res*.5)*vertical_fov/vertical_res
+				print("X_Ang:",x_ang)
+				print("Y_Ang:",y_ang)
+				print("\n\n")
 					
-					#if vehicle.mode !='LOITER':
+				  #if vehicle.mode !='LOITER':
 						#vehicle.mode = VehicleMode('LOITER')
 						#while vehicle.mode !='LOITER':
 							#time.sleep(1)
@@ -550,7 +552,7 @@ def subscriber():
 						#tracking=True
 						#ugh=0
 					#else:
-					track(x_ang,y_ang)
+				track(x_ang,y_ang)
 						#tracking=True
 						#ugh=0
 					
@@ -580,13 +582,13 @@ def subscriber():
 					#)
 	        
 					#print("FOUND: ",alias[int(str(ids[0]))-16])
-					print("X:",x," Y:",y)
-					print('FOUND COUNT: '+str(found_count)+ ' NOTFOUND COUNT: '+str(notfound_count))
+				print("X:",x," Y:",y)
+				print('FOUND COUNT: '+str(found_count)+ ' NOTFOUND COUNT: '+str(notfound_count))
 	                
-					found_count = found_count + 1
-					found = True
+				found_count = found_count + 1
+				found = True
 	
-					time_last_seen=time.time()
+				time_last_seen=time.time()
 			#else:
 				#notfound_count=notfound_count+1
 				#if time.time()- time_last_seen > timetosee:
@@ -623,112 +625,108 @@ def subscriber():
 
 # Interrupt handler for given keyboard inputs. Threaded to make it always available.
 def interrupt():
-	global interrupt, Kill_Interrupt, last_refresh_time, vehicle, refresh_time, START
-	refresh = 0
-	first = True
-	while True:
+  global interrupt, Kill_Interrupt, last_refresh_time, vehicle, refresh_time, START
+  refresh = 0
+  first = True
 
-		if first == True:
-			print("\nENTER 'Q' for Emergency LAND\nENTER 'W' to KILL Motors\nENTER 'E' to exit\nENTER 'R' to Return to Launch\nENTER 'NULL' for Vehicle Status\nENTER 'O' for OPTIONS\n\n")
-			first = False
+  while True:
+    if first == True:
+      print("\nENTER 'Q' for Emergency LAND\nENTER 'W' to KILL Motors\nENTER 'E' to exit\nENTER 'R' to Return to Launch\nENTER 'NULL' for Vehicle Status\nENTER 'O' for OPTIONS\n\n")
+      first = False
 	
+
+    for _ in range(1):
+      uinput = input()
+      
+      if uinput == "o":
+        print("\nENTER 'S' to START\nENTER 'Q' for Emergency LAND\nENTER 'W' to KILL Motors\nENTER 'E' to exit\nENTER 'R' to Return to Launch\nENTER 'NULL' for Vehicle Status\nENTER 'O' for OPTIONS\n\n")
 	
-		for _ in range(1):
-			uinput = input()
-	
-	
-		if uinput == "o":
-			print("\nENTER 'S' to START\nENTER 'Q' for Emergency LAND\nENTER 'W' to KILL Motors\nENTER 'E' to exit\nENTER 'R' to Return to Launch\nENTER 'NULL' for Vehicle Status\nENTER 'O' for OPTIONS\n\n")
-			
-		if uinput -- "s":
-	  print("Starting in 3...")
-	  time.sleep(1)
-	  print("Starting in 2...")
-	  time.sleep(1)
-	  print("Starting in 1...")
-	  time.sleep(1)
-	  print("Script Started!")
-		START = True
-	
-		if uinput == "q":
-			interrupt = True
-			print("\n\nEMERGENCY LAND")
-			Land()
-	
-		if uinput == "w":
-			interrupt = True
-			Kill_Interrupt == True
-			print("\n\nKILLING MOTORS")
-			msg = vehicle.message_factory.command_long_encode(
-			0,0, #target system, target component
-			common.MAV_CMD_DO_FLIGHTTERMINATION, #command
-			0, #confirmationlast_refresh_time=0
-			1, #param 1
-			0,0,0, #unused params
-			0,0,0)
-			vehicle.send_mavlink(msg)
-	
-		if uinput =="e":
-			interrupt = True
-			if vehicle.armed == False:
-			  print("Exiting")
-			  vehicle.close
-			  sys.exit()
-	
-		if uinput =="r":
-			interrupt = True
-			print("Return to Launch!")
-			vehicle.mode = VehicleMode("RTL")
-			while vehicle.armed:
-				time.sleep(1)
-			vehicle.close
-			exit()
-	
-		if uinput == "":
-			print("\n#####VEHICLE STATUS#####")
-			mode=vehicle.mode.name
-			if vehicle.armed==True:
-				print("Vehicle Armed")
-				print("MODE: ",mode)
-			if vehicle.armed==False:
-				print("Vehicle Disarmed")
-				print("MODE:", end = " ")
-				print(vehicle.mode.name)
-			if vehicle.armed==False and first==False:
-				print("ENTER 'E' to exit\n\n")
+      if uinput -- "s":
+        print("Starting in 3...")
+        time.sleep(1)
+        print("Starting in 2...")
+        time.sleep(1)
+        print("Starting in 1...")
+        time.sleep(1)
+        print("Script Started!")
+        START = True
+      
+      if uinput == "q":
+        interrupt = True
+        print("\n\nEMERGENCY LAND")
+        Land()
+        
+      if uinput == "w":
+        interrupt = True
+        Kill_Interrupt == True
+        print("\n\nKILLING MOTORS")
+        msg = vehicle.message_factory.command_long_encode(
+        0,0, #target system, target component
+        common.MAV_CMD_DO_FLIGHTTERMINATION, #command
+        0, #confirmationlast_refresh_time=0
+        1, #param 1
+        0,0,0, #unused params
+        0,0,0)
+        vehicle.send_mavlink(msg)
+      
+      if uinput =="e":
+        #interrupt = True
+        if vehicle.armed == False:
+          print("Exiting")
+          vehicle.close
+          sys.exit()
+        if vehicle.armed == True:
+          print("Vehicle Still Armed!")
+        
+      if uinput =="r": #TODO: Ensure motors can still be killed
+        interrupt = True
+        print("Return to Launch!")
+        vehicle.mode = VehicleMode("RTL")
+        while vehicle.armed:
+          time.sleep(1)
+          vehicle.close
+          exit()
+    
+      
+      if uinput == "":
+        print("\n#####VEHICLE STATUS#####")
+        mode=vehicle.mode.name
+        if vehicle.armed==True:
+          print("Vehicle Armed")
+          print("MODE: ",mode)
+        if vehicle.armed==False:
+          print("Vehicle Disarmed")
+          print("MODE:", end = " ")
+          print(vehicle.mode.name)
+        if vehicle.armed==False and first==False:
+          print("ENTER 'E' to exit\n\n")
 
 
 if __name__=='__main__':
-
-	vehicle = connectMyCopter()
-	print("Connected!")
-	
-	interruptor = Thread(target=interrupt)
-	interruptor.start()
-	
-  	while True:
-  		if interrupt == True:
-  			break
-  		
-  		if START == True:
-  		  #arm_and_takeoff(seekingalt)
-    		#goto(0)
-    		subscriber()
-    		#if vehicle.mode !='LOITER':
-    			#vehicle.mode = VehicleMode('LOITER')
-    			#while vehicle.mode !='LOITER':
-    				#time.sleep(1)
-    		#AltCorrect(2)
-    		#time.sleep(1)
-    		#if flush == 1:
-    			#flush=0
-    			#dummy_yaw_initializer(True,seekingalt)
-    			#time.sleep(3)
-    			#just_flushed=1
-    			#goto(0)
+  
+  vehicle = connectMyCopter()
+  print("Connected!")
+  
+  interruptor = Thread(target=interrupt)
+  interruptor.start()
+  while True:
     
-                    # lat_home=-35.3632609#vehicle.location.global_relative_frame.lat
-                    # lon_home=149.1652352#vehicle.location.global_relative_frame.lon
-                    # wp_home=LocationGlobalRelative(lat_home,lon_home,5)
-                    # wp1=LocationGlobalRelative(-35.36303741,149.1652374,5)
-                    # wp2=LocationGlobalRelative(lat_home-0.00022349,lon_home-0.0000022,5)
+    if interrupt == True:
+      break
+    
+    if START == True:
+      arm_and_takeoff(seekingalt)
+      #goto(0)
+      #subscriber()
+      if vehicle.mode !='LOITER':
+        vehicle.mode = VehicleMode('LOITER')
+        while vehicle.mode !='LOITER':
+        time.sleep(1)
+      #AltCorrect(2)
+      #time.sleep(1)
+      #if flush == 1:
+        #flush=0
+        #dummy_yaw_initializer(True,seekingalt)
+        #time.sleep(3)
+        #just_flushed=1
+        #goto(0)
