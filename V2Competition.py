@@ -72,7 +72,7 @@ targsleft = 3
 index = 0
 time_last_seen=0
 
-#app = Flask(__name__)
+app = Flask(__name__)
 
 #######CAMERA Parameters#######
 alias = ["GMU","GWU","VT","Howard", "USF"]
@@ -612,16 +612,17 @@ def subscriber():
 	if flush == 1: #and time.time()-flush_time >3:dddd
         #sub.unregister()
 		return None
-    #ret,buffer = cv.imencode('.jpg', frame)
-   # frame = buffer.tobytes()
-    #yield (b'--frame\r\n'
-          # b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+		
+  ret,buffer = cv.imencode('.jpg', frame)
+  frame = buffer.tobytes()
+  yield (b'--frame\r\n'
+          b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 	#goto(0)
 	return None
 
-#@app.route('/video_feed')
-#def video_feed():
-    	#return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+@app.route('/video_feed')
+def video_feed():
+  return Response(subscriber(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # Interrupt handler for given keyboard inputs. Threaded to make it always available.
 def interrupt():
@@ -703,7 +704,7 @@ def interrupt():
 
 
 if __name__=='__main__':
-  
+  app.run(host='0.0.0.0' , port='5000')
   vehicle = connectMyCopter()
   print("Connected!")
   
@@ -721,7 +722,7 @@ if __name__=='__main__':
       if vehicle.mode !='LOITER':
         vehicle.mode = VehicleMode('LOITER')
         while vehicle.mode !='LOITER':
-        time.sleep(1)
+          time.sleep(1)
       #AltCorrect(2)
       #time.sleep(1)
       #if flush == 1:
