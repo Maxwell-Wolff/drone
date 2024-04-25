@@ -421,14 +421,14 @@ def AltCorrect(FiringAlt):
 	if interrupt == True:
 		return None               #NEED TO ADJUST PWM SIGNAL TO WORK WITH VARIOUS ALTITUDES
 	if vehicle.location.global_relative_frame.alt < FiringAlt:
-		vz = -0.3
-        #vehicle.channels.overrides['3']=1650
+		#vz = -0.3
+        vehicle.channels.overrides['3']=1650
 	if vehicle.location.global_relative_frame.alt > FiringAlt:
-		vz = 0.3
-        #vehicle.channels.overrides['3']=1350
+		#vz = 0.3
+        vehicle.channels.overrides['3']=1350
 	if vehicle.location.global_relative_frame.alt/FiringAlt < 1.2 and vehicle.location.global_relative_frame.alt/FiringAlt > 0.8:
-		vz = 0
-        #vehicle.channels.overrides['3']=1500
+		#vz = 0
+        vehicle.channels.overrides['3']=1500
 
 	send_local_ned_velocity(0,0,vz)
 	return None
