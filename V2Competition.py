@@ -632,7 +632,7 @@ def interrupt():
 
   while True:
     if first == True:
-      print("\nENTER 'Q' for Emergency LAND\nENTER 'W' to KILL Motors\nENTER 'E' to exit\nENTER 'R' to Return to Launch\nENTER 'NULL' for Vehicle Status\nENTER 'O' for OPTIONS\n\n")
+      print("\nENTER 'S' to START\nENTER 'Q' for Emergency LAND\nENTER 'W' to KILL Motors\nENTER 'E' to exit\nENTER 'R' to Return to Launch\nENTER 'NULL' for Vehicle Status\nENTER 'O' for OPTIONS\n\n")
       first = False
 	
 
@@ -642,7 +642,7 @@ def interrupt():
       if uinput == "o":
         print("\nENTER 'S' to START\nENTER 'Q' for Emergency LAND\nENTER 'W' to KILL Motors\nENTER 'E' to exit\nENTER 'R' to Return to Launch\nENTER 'NULL' for Vehicle Status\nENTER 'O' for OPTIONS\n\n")
 	
-      if uinput -- "s":
+      if uinput == "s":
         print("Starting in 3...")
         time.sleep(1)
         print("Starting in 2...")
