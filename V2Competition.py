@@ -612,11 +612,11 @@ def subscriber():
 	if flush == 1: #and time.time()-flush_time >3:dddd
         #sub.unregister()
 		return None
-		
-  ret,buffer = cv.imencode('.jpg', frame)
-  frame = buffer.tobytes()
-  yield (b'--frame\r\n'
-          b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+	
+	ret,buffer = cv.imencode('.jpg', frame)
+	frame = buffer.tobytes()
+	yield (b'--frame\r\n'
+	      b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 	#goto(0)
 	return None
 
