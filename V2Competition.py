@@ -716,15 +716,17 @@ if __name__=='__main__':
       break
     
     if START == True:
-      arm_and_takeoff(seekingalt)
+      arm_and_takeoff(1)
       #goto(0)
       #subscriber()
       while True:
+        if interrupt == True:
+          break
         if vehicle.mode !='LOITER':
           vehicle.mode = VehicleMode('LOITER')
           while vehicle.mode !='LOITER':
             time.sleep(1)
-      #AltCorrect(2)
+        AltCorrect(2)
       #time.sleep(1)
       #if flush == 1:
         #flush=0
