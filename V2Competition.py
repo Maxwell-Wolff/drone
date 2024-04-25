@@ -136,10 +136,10 @@ def connectMyCopter():
   connection_string = args.connect
   baud_rate = 57600
 
-  Print("Connecting...")
+  print("Connecting...")
   vehicle = connect(connection_string,baud=baud_rate) #,wait_ready=True)
   
-  Print("Setting Parameters...")
+  print("Setting Parameters...")
   vehicle.parameters['PLND_ENABLED']=2
   vehicle.parameters['PLND_TYPE']=1
   vehicle.parameters['PLND_EST_TYPE']=0
