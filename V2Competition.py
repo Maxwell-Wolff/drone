@@ -33,7 +33,7 @@ GPIO.output(gpfire, GPIO.LOW)
 START = False
 airspeed = 2.23 # 5mph
 velocity=-.5 #m/s
-seekingalt=1 #m
+seekingalt=2 #m
 FiringAlt=2
 fire_time = 1
 wp1 = LocationGlobalRelative(28.8649019,-82.5127223,2)
