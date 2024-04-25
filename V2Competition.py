@@ -719,10 +719,11 @@ if __name__=='__main__':
       arm_and_takeoff(seekingalt)
       #goto(0)
       #subscriber()
-      if vehicle.mode !='LOITER':
-        vehicle.mode = VehicleMode('LOITER')
-        while vehicle.mode !='LOITER':
-          time.sleep(1)
+      while True:
+        if vehicle.mode !='LOITER':
+          vehicle.mode = VehicleMode('LOITER')
+          while vehicle.mode !='LOITER':
+            time.sleep(1)
       #AltCorrect(2)
       #time.sleep(1)
       #if flush == 1:
