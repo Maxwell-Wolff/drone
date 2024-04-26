@@ -252,18 +252,18 @@ def goto(targetLocation):
         time.sleep(1)
         break
         
-    if currentDistance<3 and clock_start==0:
-      proximity_time = time.time()
-      clock_start=1
+    #if currentDistance<3 and clock_start==0:
+      #proximity_time = time.time()
+      #clock_start=1
 
-    if currentDistance<1 and clock_start==1:
-      if time.time() - proximity_time > 2:
-        print("Reached waypoint on proximity time basis")
-        if flush ==0:
-          reached=1
-          clock_start=0
-          time.sleep(2)
-          break
+    #if currentDistance<1 and clock_start==1:
+      #if time.time() - proximity_time > 2:
+        #print("Reached waypoint on proximity time basis")
+        #if flush ==0:
+          #reached=1
+          #clock_start=0
+          #time.sleep(2)
+          #break
   
     #if tracking == False:
       #AltCorrect(seekingalt)
