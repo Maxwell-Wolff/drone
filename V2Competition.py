@@ -37,12 +37,16 @@ seekingalt=2 #m
 FiringAlt=2
 fire_time = 1
 #wp0 = LocationGlobalRelative()#HOME
-wp1 = LocationGlobalRelative(37.2231983 , -80.4330023,3)
-wp2 = LocationGlobalRelative(37.2230814, -80.4328220,3)
-wp3 = LocationGlobalRelative(37.2232106,-80.4329661,3)
-wp4 = LocationGlobalRelative(37.2231097,-80.4328106,3)
+wp1 = LocationGlobalRelative(37.2232186 , -80.4330218,3)
+wp2 = LocationGlobalRelative(37.2230713, -80.4327911,3)
+wp3 = LocationGlobalRelative(37.2232485,-80.4329762,3)
+wp4 = LocationGlobalRelative(37.2230948,-80.4327562,3)
+wp5 = LocationGlobalRelative(37.2232784,-80.4329360,3)
+wp6 = LocationGlobalRelative(37.2231204,-80.4327241,3)
+wp7 = LocationGlobalRelative(37.2233105, -80.4328930,3)
+wp8 = LocationGlobalRelative(37.2231503, -80.4326892,3)
 
-waypoints=[wp1,wp2,wp3,wp4]
+waypoints=[wp1,wp2,wp3,wp4,wp5,wp6]
 
 #######Function Variables#######
 init = 0
@@ -716,8 +720,8 @@ if __name__=='__main__':
   interruptor = Thread(target=interrupt)
   interruptor.start()
   
-  #subs = Thread(target=subscriber)
-  #subs.start()
+  subs = Thread(target=subscriber)
+  subs.start()
   while True:
     
     if interrupt == True:
@@ -725,11 +729,24 @@ if __name__=='__main__':
     
     if START == True:
       #arm_and_takeoff(2.5)
-      
+      goto(wp1)
+      goto(wp2)
+      goto(wp3)
+      goto(wp4)
+      goto(wp5)
+      goto(wp6)
+      goto(wp7)
+      goto(wp8)
+      Land()
       while True:
         if interrupt == True:
           break
-        subscriber()
+        #time.sleep(1)
+      #Land()
+      #while True:
+        #if interrupt == True:
+          #break
+        #subscriber()
         #if vehicle.mode !='LOITER':
           #vehicle.mode = VehicleMode('LOITER')
           #while vehicle.mode !='LOITER':
