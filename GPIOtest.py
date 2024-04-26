@@ -23,6 +23,6 @@ def connectMyCopter():
 
 connectMyCopter()
 GPIO.output(fire, GPIO.HIGH)
-time.sleep(2)
+time.sleep(0.5)
 GPIO.output(fire, GPIO.LOW)
 print("Fired")
