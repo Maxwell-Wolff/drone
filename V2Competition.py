@@ -716,8 +716,8 @@ if __name__=='__main__':
   interruptor = Thread(target=interrupt)
   interruptor.start()
   
-  subs = Thread(target=subscriber)
-  subs.start()
+  #subs = Thread(target=subscriber)
+  #subs.start()
   while True:
     
     if interrupt == True:
@@ -729,6 +729,7 @@ if __name__=='__main__':
       while True:
         if interrupt == True:
           break
+        subscriber()
         #if vehicle.mode !='LOITER':
           #vehicle.mode = VehicleMode('LOITER')
           #while vehicle.mode !='LOITER':
