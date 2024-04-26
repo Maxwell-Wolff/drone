@@ -3,7 +3,7 @@ from dronekit import connect, VehicleMode, LocationGlobalRelative, LocationGloba
 from pymavlink import mavutil
 from pymavlink.dialects.v20 import common
 import argparse
-fire=27
+fire=17
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(fire, GPIO.OUT)
