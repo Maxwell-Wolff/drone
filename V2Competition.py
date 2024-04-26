@@ -728,7 +728,7 @@ if __name__=='__main__':
       break
     
     if START == True:
-      #arm_and_takeoff(2.5)
+      arm_and_takeoff(2.5)
       goto(wp1)
       goto(wp2)
       goto(wp3)
