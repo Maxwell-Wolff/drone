@@ -249,7 +249,8 @@ def goto(targetLocation):
       if flush == 0:
         reached=1
         clock_start=0
-        time.sleep(2)
+        time.sleep(1)
+        break
         
     if currentDistance<3 and clock_start==0:
       proximity_time = time.time()
@@ -262,10 +263,11 @@ def goto(targetLocation):
           reached=1
           clock_start=0
           time.sleep(2)
+          break
   
     #if tracking == False:
       #AltCorrect(seekingalt)
-    subscriber()
+    #subscriber()
     #if reached ==1:
       #goto(0)
     #time.sleep(1)
