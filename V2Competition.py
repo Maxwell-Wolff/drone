@@ -726,7 +726,11 @@ if __name__=='__main__':
           #vehicle.mode = VehicleMode('LOITER')
           #while vehicle.mode !='LOITER':
             #time.sleep(1)
-        AltCorrect(3.5)
+        #AltCorrect(3.5)
+        goto(LocationGlobalRelative(37.2232016,-80.4329990,4))
+        goto(LocationGlobalRelative(37.2233126,-80.4328515,4))
+        goto(LocationGlobalRelative(37.2231845,-80.4328193,4))
+        Land()
       #time.sleep(1)
       #if flush == 1:
         #flush=0
