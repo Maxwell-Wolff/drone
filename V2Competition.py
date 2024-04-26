@@ -35,11 +35,12 @@ airspeed = 2.23 # 5mph
 velocity=-.5 #m/s
 seekingalt=2 #m
 FiringAlt=2
-fire_time = 1
-wp1 = LocationGlobalRelative(28.8649019,-82.5127223,2)
-wp2 = LocationGlobalRelative(28.8649479,-82.5121833,2)
-wp3 = LocationGlobalRelative(28.8648316,-82.5127111,2)
-wp4 = LocationGlobalRelative(28.8648673,-82.5121852,2)
+fire_time = 0.5
+wp0 = LocationGlobalRelative()#HOME
+wp1 = LocationGlobalRelative(37.2231983 , -80.4330023,3)
+wp2 = LocationGlobalRelative(37.2230814, -80.4328220,3)
+wp3 = LocationGlobalRelative(37.2232106,-80.4329661,3)
+wp4 = LocationGlobalRelative(37.2231097,-80.4328106,3)
 
 waypoints=[wp1,wp2,wp3,wp4]
 
@@ -445,18 +446,19 @@ def fire(): #TODO: Fire logic
 	id=id_to_find#:TODO
 	print("USF","UAV","WaterBlast!",id_to_find,timestamp,Lat,Lon,sep = "_")
 	print("Trigger Pull on ",alias[id_to_find-16],"!")
-	#GPIO.output(gpfire, GPIO.HIGH)
+	GPIO.output(gpfire, GPIO.HIGH)
 
 	while True:
 		#subscriber()
 		if time.time()-initial_time > fire_time:
 			print("Trigger Release!")
-			#GPIO.output(gpfire, GPIO.LOW)
+			GPIO.output(gpfire, GPIO.LOW)
 			Fire = False
 			index=0
 			targsleft=targsleft-1
 			ids_to_find.remove(id_to_find)
 			break
+	#goto(wp0)
 
 	#vehicle.mode = VehicleMode('GUIDED')
 	#while vehicle.mode != VehicleMode('GUIDED'):
@@ -467,7 +469,7 @@ def fire(): #TODO: Fire logic
 	#time.sleep(1)
 	#TODO: should be goto() here
 	#TODO: if ids_to_find is empty, RTL
-	subscriber()
+	#subscriber()
 	return None
 
 # Given image from subscriber() do math to determine marker location, return rotation and translation vector arrays
@@ -554,7 +556,8 @@ def subscriber():
 						#tracking=True
 						#ugh=0
 					#else:
-				track(x_ang,y_ang)
+				#track(x_ang,y_ang)
+				fire()
 						#tracking=True
 						#ugh=0
 					
@@ -712,15 +715,17 @@ if __name__=='__main__':
   
   interruptor = Thread(target=interrupt)
   interruptor.start()
+  
+  subs = Thread(target=subscriber)
+  subs.start()
   while True:
     
     if interrupt == True:
       break
     
     if START == True:
-      arm_and_takeoff(2.5)
-      #goto(0)
-      #subscriber()
+      #arm_and_takeoff(2.5)
+      
       while True:
         if interrupt == True:
           break
@@ -729,10 +734,10 @@ if __name__=='__main__':
           #while vehicle.mode !='LOITER':
             #time.sleep(1)
         #AltCorrect(3.5)
-        goto(LocationGlobalRelative(37.2232016,-80.4329990,4))
-        goto(LocationGlobalRelative(37.2233126,-80.4328515,4))
-        goto(LocationGlobalRelative(37.2231845,-80.4328193,4))
-        Land()
+      #goto(wp1)
+      #goto(wp2)
+      #goto(wp3)
+      #goto(wp4)
       #time.sleep(1)
       #if flush == 1:
         #flush=0
