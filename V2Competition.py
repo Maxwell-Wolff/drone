@@ -35,7 +35,7 @@ airspeed = 2.23 # 5mph
 velocity=-.5 #m/s
 seekingalt=2 #m
 FiringAlt=2
-fire_time = 0.5
+fire_time = 1
 #wp0 = LocationGlobalRelative()#HOME
 wp1 = LocationGlobalRelative(37.2231983 , -80.4330023,3)
 wp2 = LocationGlobalRelative(37.2230814, -80.4328220,3)
@@ -445,7 +445,7 @@ def fire(): #TODO: Fire logic
 	Lon = vehicle.location.global_relative_frame.lon
 	id=id_to_find#:TODO
 	print("USF","UAV","WaterBlast!",id_to_find,timestamp,Lat,Lon,sep = "_")
-	print("Trigger Pull on ",alias[id_to_find-16],"!")
+	print("Trigger Pull on ",id_to_find,"!")
 	GPIO.output(gpfire, GPIO.HIGH)
 
 	while True:
