@@ -671,7 +671,7 @@ def interrupt():
         vehicle.send_mavlink(msg)
       
       if uinput =="e":
-        #interrupt = True
+        interrupt = True
         if vehicle.armed == False:
           print("Exiting")
           vehicle.close
@@ -716,7 +716,7 @@ if __name__=='__main__':
       break
     
     if START == True:
-      arm_and_takeoff(1)
+      arm_and_takeoff(2.5)
       #goto(0)
       #subscriber()
       while True:
@@ -726,7 +726,7 @@ if __name__=='__main__':
           #vehicle.mode = VehicleMode('LOITER')
           #while vehicle.mode !='LOITER':
             #time.sleep(1)
-        AltCorrect(2.5)
+        AltCorrect(3.5)
       #time.sleep(1)
       #if flush == 1:
         #flush=0
