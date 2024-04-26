@@ -454,9 +454,9 @@ def fire(): #TODO: Fire logic
 			print("Trigger Release!")
 			GPIO.output(gpfire, GPIO.LOW)
 			Fire = False
-			index=0
-			targsleft=targsleft-1
-			ids_to_find.remove(id_to_find)
+			#index=0
+			#targsleft=targsleft-1
+			#ids_to_find.remove(id_to_find)
 			break
 	#goto(wp0)
 
