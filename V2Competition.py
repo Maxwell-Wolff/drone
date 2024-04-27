@@ -231,12 +231,13 @@ def WHEREINEEDTOBE():
     if waypointinit == 0:
         currentwp=0
         waypointinit = 1
-    for i in range(0,3):
-        if currentwp==i and reached ==1 and currentwp < 3:
+    for i in range(0,21):
+        if currentwp==i and reached ==1 and currentwp < 21:
 
             currentwp = i+1
             reached=0
-    #if currentwp == 4 and reached ==1:
+    if currentwp == 21 and reached ==1:
+      Land()
         #currentwp=0
     print("SET WAYPOINT: ", currentwp)
     return(currentwp)
@@ -732,20 +733,20 @@ if __name__=='__main__':
       break
 #DONT CODE ABOVE HERE
     if START == True:
-      arm_and_takeoff(4)
+      arm_and_takeoff(3)
       while True:
         if interrupt == True:
           break
         
         goto(0)
-        if vehicle.location.global_relative_frame.alt < 4:
-          while True:
-            if interrupt == True:
-              break
-            AltCorrect(4)
-            time.sleep(1)
-            if vehicle.location.global_relative_frame.alt > 4:
-              break
+        #if vehicle.location.global_relative_frame.alt < 3:
+          #while True:
+            #if interrupt == True:
+              #break
+            #AltCorrect(3)
+            #time.sleep(1)
+            #if vehicle.location.global_relative_frame.alt > 3:
+              #break
       #arm_and_takeoff(3)
       #goto(0)
       #while True:
