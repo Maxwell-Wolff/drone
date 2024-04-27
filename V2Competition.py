@@ -459,8 +459,8 @@ def fire(): #TODO: Fire logic
 			print("Trigger Release!")
 			GPIO.output(gpfire, GPIO.LOW)
 			Fire = False
-			f= open("LOG.txt","w+")
-			f.write("USF_UAV_WaterBlast!_"+str(id_to_find)+"__"+str(timestamp)+"_"+str(Lat)+"_"+str(Lon)+"")
+			f= open("LOG.txt","a")
+			f.write("USF_UAV_WaterBlast!_"+str(id_to_find)+"__"+str(timestamp)+"_"+str(Lat)+"_"+str(Lon)+"\n")
 			f.write(" ")
 			f.close
 			index=0
