@@ -31,44 +31,40 @@ GPIO.output(gpfire, GPIO.LOW)
 
 #######Flight Parameters#######
 START = False
-airspeed = 0.5 # 5mph/
+airspeed = 0.5 # 1.11m/s = see everything
 velocity=-.5 #m/s
-seekingalt=2 #m
+seekingalt=3 #m
 FiringAlt=2
 fire_time = 1
 
-
-wp1 = LocationGlobalRelative( 37.2229816, -80.4322614, 6)
-wp2 = LocationGlobalRelative( 37.2228748, -80.4323774,6)
-wp3 = LocationGlobalRelative( 37.2227680, -80.4324934, 6)
-
-wp4 = LocationGlobalRelative( 37.2228192, -80.4325725, 6)
-wp5 = LocationGlobalRelative( 37.2229255, -80.4324538,6)
-wp6 = LocationGlobalRelative( 37.2230318, -80.4323351, 6)
-
-wp7 = LocationGlobalRelative( 37.2230777, -80.4324210, 6)
-wp8 = LocationGlobalRelative( 37.2229768, -80.4325283,6)
-wp9 = LocationGlobalRelative( 37.2228758, -80.4326355, 6)
-
-wp10 = LocationGlobalRelative( 37.2229271, -80.4327187, 6)
-wp11 = LocationGlobalRelative( 37.2230312, -80.4326054,6)
-wp12 = LocationGlobalRelative( 37.2231353, -80.4324920, 6)
-
-wp13 = LocationGlobalRelative( 37.2231834, -80.4325671, 6)
-wp14 = LocationGlobalRelative( 37.2230798, -80.4326825,6)
-wp15 = LocationGlobalRelative( 37.2229762, -80.4327978, 6)
-
-wp16 = LocationGlobalRelative( 37.2230307, -80.4328743, 6)
-wp17 = LocationGlobalRelative( 37.2231359, -80.4327570,6)
-wp18 = LocationGlobalRelative( 37.2232411, -80.4326396, 6)
-
-wp19 = LocationGlobalRelative( 37.2232934, -80.4327147, 6)
-wp20 = LocationGlobalRelative( 37.2231893, -80.4328254,6)
-wp21 = LocationGlobalRelative( 37.2230851, -80.4329360, 6)
+wp1 = LocationGlobalRelative(37.22294647349227, -80.43222861834133 ,seekingalt)
+wp2 = LocationGlobalRelative( 37.22274303730939, -80.43246465273391 ,seekingalt)
+wp3 = LocationGlobalRelative(37.22275958988012, -80.43248678095821 ,seekingalt)
+wp4 = LocationGlobalRelative(37.22297210320749, -80.43224806435663 ,seekingalt)
+wp5 = LocationGlobalRelative(37.2229907915368, -80.43227220423769 ,seekingalt)
+wp6 = LocationGlobalRelative(37.22277507453977, -80.43250756807801 ,seekingalt)
+wp7 = LocationGlobalRelative( 37.22279429687148, -80.43253975458609 ,seekingalt)
+wp8 = LocationGlobalRelative( 37.223007878005234, -80.43230372019352 ,seekingalt)
+wp9 = LocationGlobalRelative( 37.22303243979685, -80.43233523614934 ,seekingalt)
+wp10 = LocationGlobalRelative( 37.222818324779205, -80.43257194109415 ,seekingalt)
+wp11= LocationGlobalRelative( 37.222834877333426, -80.43260211594549 ,seekingalt)
+wp12 = LocationGlobalRelative( 37.22305006020841, -80.4323573643737 ,seekingalt)
+wp13 = LocationGlobalRelative(37.22306661271176, -80.43239022143403 ,seekingalt)
+wp14 = LocationGlobalRelative( 37.22285303174431, -80.43262558527437 ,seekingalt)
+wp15 = LocationGlobalRelative(37.22287011824399, -80.43265643067792 ,seekingalt)
+wp16 = LocationGlobalRelative( 37.223084453533566, -80.43240904426426 ,seekingalt)
+wp17 = LocationGlobalRelative( 37.22310250415807, -80.43244121893053 ,seekingalt)
+wp18 = LocationGlobalRelative( 37.22288764321843, -80.43267960395801 ,seekingalt)
+wp19 = LocationGlobalRelative( 37.22291326352526, -80.43270812241245 ,seekingalt)
+wp20 = LocationGlobalRelative( 37.223121137056694, -80.43247046862737 ,seekingalt)
 
 
 
-waypoints=[wp1,wp2,wp3,wp4,wp5,wp6,wp7,wp8,wp9,wp10,wp11,wp12,wp13,wp14,wp15,wp16,wp17,wp18,wp19,wp20,wp21]
+
+
+
+
+waypoints=[wp1,wp2,wp3,wp4,wp5,wp6,wp7,wp8,wp9,wp10,wp11,wp12,wp13,wp14,wp15,wp16,wp17,wp18,wp19,wp20]
 
 
 #######Function Variables#######
@@ -250,8 +246,10 @@ def WHEREINEEDTOBE():
 def goto(targetLocation):
   if interrupt == True:
     return None
+  if found == True:
+    return None
   
-  global reached, flush
+  global reached, flush, found
   
   if flush==1:
     return None
@@ -267,6 +265,8 @@ def goto(targetLocation):
   print("GOING TO WAYPOINT: ", currentwp)
   
   while vehicle.mode.name=="GUIDED":
+    if found == True:
+      break
     currentDistance = get_distance_meters(targetLocation,vehicle.location.global_relative_frame)
     
     #if currentDistance<distanceToTargetLocation*.03:
@@ -274,7 +274,7 @@ def goto(targetLocation):
       print("Reached waypoint.")
       reached=1
       clock_start=0
-      time.sleep(1)
+      time.sleep(0.5)
       break
   
     #if tracking == False:
@@ -450,7 +450,7 @@ def AltCorrect(FiringAlt):
 
 # Handles firing events: logging, trigger pull for set time, maintaining tracking.
 def fire(): #TODO: Fire logic
-	global fire_time, ids_to_find, targsleft, id_to_find, index, sub, flush, flush_time, Fire
+	global fire_time, ids_to_find, targsleft, id_to_find, index, sub, flush, flush_time, Fire, found
 	initial_time=time.time()
 	timestamp = datetime.now(pytz.utc).isoformat().replace("+00:00","Z")
 	Lat = vehicle.location.global_relative_frame.lat
@@ -473,6 +473,7 @@ def fire(): #TODO: Fire logic
 			targsleft=targsleft-1
 			
 			ids_to_find.remove(id_to_find)
+			found = False
 			break
 	#goto(wp0)
 
@@ -545,6 +546,7 @@ def subscriber():
   				)
   				print("SEEN:", alias[ids[0]-16])
   				if ids[0]==id_to_find:
+  				  found = True
   				  vehicle.channels.overrides['8']=2000
   	
   				  corners = corners.reshape(4, 2)
@@ -612,7 +614,7 @@ def subscriber():
   				  print('FOUND COUNT: '+str(found_count)+ ' NOTFOUND COUNT: '+str(notfound_count))
   	                
   				  found_count = found_count + 1
-  				  found = True
+  				  
   	
   				  time_last_seen=time.time()
   			#else:
@@ -735,7 +737,7 @@ if __name__=='__main__':
       break
 #DONT CODE ABOVE HERE
     if START == True:
-      arm_and_takeoff(6)
+      arm_and_takeoff(3)
       while True:
         if interrupt == True:
           break
