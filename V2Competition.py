@@ -267,7 +267,7 @@ def goto(targetLocation):
     currentDistance = get_distance_meters(targetLocation,vehicle.location.global_relative_frame)
     
     #if currentDistance<distanceToTargetLocation*.03:
-    if currentDistance<0.5:
+    if currentDistance<1:
       print("Reached waypoint.")
       reached=1
       clock_start=0
