@@ -620,8 +620,8 @@ def subscriber():
   			index = index+1
   			tracking = False
   			time_last = time.time()
-    if index > targsleft:
-      index=0
+  	if index > targsleft:
+  	  index=0
   	#if flush == 1: #and time.time()-flush_time >3:dddd
           #sub.unregister()
   		
