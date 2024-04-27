@@ -549,7 +549,7 @@ def subscriber():
   				if ids[0]==id_to_find:
   				  found = True
   				  vehicle.channels.overrides['8']=2000
-  	
+  	    
   				  corners = corners.reshape(4, 2)
   				  corners = corners.astype(int)
   				  top_right = corners[0].ravel()
@@ -574,6 +574,7 @@ def subscriber():
   					
   				  if vehicle.mode !='LOITER':
   				    vehicle.mode = VehicleMode('LOITER')
+  				    vehicle.channels.overrides['3']=1500
   				  while vehicle.mode !='LOITER':
   				    time.sleep(1)
   				    track(x_ang,y_ang)
@@ -738,12 +739,12 @@ if __name__=='__main__':
       break
 #DONT CODE ABOVE HERE
     if START == True:
-      #arm_and_takeoff(3)
+      arm_and_takeoff(3)
       while True:
         if interrupt == True:
           break
         
-        #goto(0)
+        goto(0)
         #if vehicle.location.global_relative_frame.alt < 3:
           #while True:
             #if interrupt == True:
