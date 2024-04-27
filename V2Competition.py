@@ -244,12 +244,13 @@ def WHEREINEEDTOBE():
 #waypoint is passed, or the flight mode is switched from guided.
 #Pass 0 for automated waypoint decision via WHEREINEEDTOBE(), 1 for manual gps location
 def goto(targetLocation):
+  global reached, flush, found
   if interrupt == True:
     return None
   if found == True:
     return None
   
-  global reached, flush, found
+  
   
   if flush==1:
     return None
