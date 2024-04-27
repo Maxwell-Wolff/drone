@@ -509,8 +509,8 @@ def subscriber():
   	timetosee=3
   	if just_flushed == 1:
   		timetosee=0
-    print(index)
   	id_to_find=ids_to_find[index]
+  	print(index)
   	#print("Looking for:",alias[index])
       
   	frame = picam2.capture_array("main")
@@ -533,80 +533,81 @@ def subscriber():
   				cv.polylines(
   				frame, [corners.astype(np.int32)], True, (0, 255, 255), 4, cv.LINE_AA
   				)
-  				print("SEEN:", alias[ids[0]-16])
-  	
-  				corners = corners.reshape(4, 2)
-  				corners = corners.astype(int)
-  				top_right = corners[0].ravel()
-  				top_left = corners[1].ravel()
-  				bottom_right = corners[2].ravel()
-  				bottom_left = corners[3].ravel()
-  				x = round(tVec[i][0][0],1)
-  				y = round(tVec[i][1][0],1)
-  				y_sum=0
-  				x_sum=0
-  					
-  				x_sum = marker_corners[0][0][0][0] + marker_corners[0][0][1][0] + marker_corners[0][0][2][0] +marker_corners[0][0][3][0]
-  				y_sum = marker_corners[0][0][0][1] + marker_corners[0][0][1][1] + marker_corners[0][0][2][1] +marker_corners[0][0][3][1]
-  					
-  				x_avg = x_sum / 4
-  				y_avg = y_sum / 4
-  				x_ang = (x_avg - horizontal_res*.5)*horizontal_fov/horizontal_res
-  				y_ang = (y_avg - vertical_res*.5)*vertical_fov/vertical_res
-  				print("X_Ang:",x_ang)
-  				print("Y_Ang:",y_ang)
-  				print("\n\n")
-  					
-  				if vehicle.mode !='LOITER':
-  				  vehicle.mode = VehicleMode('LOITER')
-  				  while vehicle.mode !='LOITER':
-  				    time.sleep(1)
-  				  track(x_ang,y_ang)
-  					#tracking=True
-  						#ugh=0
-  				else:
-  				  track(x_ang,y_ang)
-  					#tracking=True
-  						#ugh=0
-  					
-  				
-  					
-  					#point = cv.drawFrameAxes(frame, cam_mat, dist_coef, rVec[i], tVec[i], 4, 4)
-  					#cv.putText(
-  						#frame,
-  						#f"id: {alias[int(str(ids[0]))-16]}",
-  						#top_right,
-  						#cv.FONT_HERSHEY_PLAIN,
-  						#1.3,
-  						#(0, 0, 255),
-  						#2,
-  						#cv.LINE_AA,
-  					#)
-  					#print("made it HERE")
-  					#cv.putText(
-  						#frame,
-  						#f"x:{round(tVec[i][0][0],1)} y: {round(tVec[i][1][0],1)} ",
-  						#bottom_right,
-  						#cv.FONT_HERSHEY_PLAIN,
-  						#1.0,
-  						#(0, 0, 255),
-  						#2,
-  						#cv.LINE_AA,
-  					#)
-  	        
-  					#print("FOUND: ",alias[int(str(ids[0]))-16])
-  				print("X:",x," Y:",y)
-  				print('FOUND COUNT: '+str(found_count)+ ' NOTFOUND COUNT: '+str(notfound_count))
-  	                
-  				found_count = found_count + 1
-  				found = True
-  	
-  				time_last_seen=time.time()
-  			#else:
-  				#notfound_count=notfound_count+1
-  				#if time.time()- time_last_seen > timetosee:
-  				#	index = index+1
-  				#	tracking = False
+  				if ids[0]==id_to_find:
+    				print("SEEN:", alias[ids[0]-16])
+    	
+    				corners = corners.reshape(4, 2)
+    				corners = corners.astype(int)
+    				top_right = corners[0].ravel()
+    				top_left = corners[1].ravel()
+    				bottom_right = corners[2].ravel()
+    				bottom_left = corners[3].ravel()
+    				x = round(tVec[i][0][0],1)
+    				y = round(tVec[i][1][0],1)
+    				y_sum=0
+    				x_sum=0
+    					
+    				x_sum = marker_corners[0][0][0][0] + marker_corners[0][0][1][0] + marker_corners[0][0][2][0] +marker_corners[0][0][3][0]
+    				y_sum = marker_corners[0][0][0][1] + marker_corners[0][0][1][1] + marker_corners[0][0][2][1] +marker_corners[0][0][3][1]
+    					
+    				x_avg = x_sum / 4
+    				y_avg = y_sum / 4
+    				x_ang = (x_avg - horizontal_res*.5)*horizontal_fov/horizontal_res
+    				y_ang = (y_avg - vertical_res*.5)*vertical_fov/vertical_res
+    				print("X_Ang:",x_ang)
+    				print("Y_Ang:",y_ang)
+    				print("\n\n")
+    					
+    				if vehicle.mode !='LOITER':
+    				  vehicle.mode = VehicleMode('LOITER')
+    				  while vehicle.mode !='LOITER':
+    				    time.sleep(1)
+    				  track(x_ang,y_ang)
+    					#tracking=True
+    						#ugh=0
+    				else:
+    				  track(x_ang,y_ang)
+    					#tracking=True
+    						#ugh=0
+    					
+    				
+    					
+    					#point = cv.drawFrameAxes(frame, cam_mat, dist_coef, rVec[i], tVec[i], 4, 4)
+    					#cv.putText(
+    						#frame,
+    						#f"id: {alias[int(str(ids[0]))-16]}",
+    						#top_right,
+    						#cv.FONT_HERSHEY_PLAIN,
+    						#1.3,
+    						#(0, 0, 255),
+    						#2,
+    						#cv.LINE_AA,
+    					#)
+    					#print("made it HERE")
+    					#cv.putText(
+    						#frame,
+    						#f"x:{round(tVec[i][0][0],1)} y: {round(tVec[i][1][0],1)} ",
+    						#bottom_right,
+    						#cv.FONT_HERSHEY_PLAIN,
+    						#1.0,
+    						#(0, 0, 255),
+    						#2,
+    						#cv.LINE_AA,
+    					#)
+    	        
+    					#print("FOUND: ",alias[int(str(ids[0]))-16])
+    				print("X:",x," Y:",y)
+    				print('FOUND COUNT: '+str(found_count)+ ' NOTFOUND COUNT: '+str(notfound_count))
+    	                
+    				found_count = found_count + 1
+    				found = True
+    	
+    				time_last_seen=time.time()
+    			#else:
+    				#notfound_count=notfound_count+1
+    				#if time.time()- time_last_seen > timetosee:
+    				#	index = index+1
+    				#	tracking = False
   		else:
   			notfound_count=notfound_count+1
   			if time.time()- time_last_seen > timetosee:
@@ -727,3 +728,4 @@ if __name__=='__main__':
       while True:
         if interrupt == True:
           break
+
