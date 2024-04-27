@@ -736,7 +736,7 @@ if __name__=='__main__':
             break
           AltCorrect(4)
           print("Correcting Alt")
-          if vehicle.location.global_relative_frame > 4:
+          if vehicle.location.global_relative_frame.alt > 4:
             break
       goto(waypoints[1])
       if vehicle.location.global_relative_frame.alt < 4:
@@ -745,7 +745,7 @@ if __name__=='__main__':
             break
           AltCorrect(3)
           print("Correcting Alt")
-          if vehicle.location.global_relative_frame > 4:
+          if vehicle.location.global_relative_frame.alt > 4:
             break
       
       #arm_and_takeoff(3)
