@@ -441,7 +441,7 @@ def AltCorrect(FiringAlt):
 		#vehicle.channels.overrides['3']=1500
 
 	send_local_ned_velocity(0,0,vz)
-	#return None
+	return None
 
 # Handles firing events: logging, trigger pull for set time, maintaining tracking.
 def fire(): #TODO: Fire logic
@@ -735,6 +735,7 @@ if __name__=='__main__':
           if interrupt == True:
             break
           AltCorrect(3)
+          print("Correcting Alt")
           if vehicle.location.global_relative_frame > 2.5:
             break
       goto(waypoints[1])
@@ -743,6 +744,7 @@ if __name__=='__main__':
           if interrupt == True:
             break
           AltCorrect(3)
+          print("Correcting Alt")
           if vehicle.location.global_relative_frame > 2.5:
             break
       
