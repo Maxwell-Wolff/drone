@@ -513,7 +513,7 @@ def subscriber():
   	if index>targsleft:
   	  index = 0
   	id_to_find=ids_to_find[index]
-    print("INDEX: ",index)
+  	print("INDEX: ",index)
   	#print("Looking for:",alias[index])
       
   	frame = picam2.capture_array("main")
