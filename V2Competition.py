@@ -460,11 +460,11 @@ def fire(): #TODO: Fire logic
 			GPIO.output(gpfire, GPIO.LOW)
 			Fire = False
 			f= open("LOG.txt","w+")
-			f.write("USF_UAV_WaterBlast!_"+id_to_find+"__"+timestamp+"_"+Lat+"_"+Lon)
+			f.write("USF_UAV_WaterBlast!_"+str(id_to_find)+"__"+str(timestamp)+"_"+str(Lat)+"_"+str(Lon))
 			f.close
 			index=0
 			targsleft=targsleft-1
-			print("TARGSLEFT AFTER FIRE: ",targsleft)
+			
 			ids_to_find.remove(alias[id_to_find-16])
 			break
 	#goto(wp0)
@@ -509,11 +509,11 @@ def subscriber():
   	timetosee=3
   	if just_flushed == 1:
   		timetosee=0
-  	print("TARGSLEFT: ",targsleft)
+
   	if index>targsleft:
   	  index = 0
   	id_to_find=ids_to_find[index]
-  	print("INDEX: ",index)
+
   	#print("Looking for:",alias[index])
       
   	frame = picam2.capture_array("main")
