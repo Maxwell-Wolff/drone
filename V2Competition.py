@@ -31,7 +31,7 @@ GPIO.output(gpfire, GPIO.LOW)
 
 #######Flight Parameters#######
 START = False
-airspeed = 0.8 # 5mph/
+airspeed = 0.5 # 5mph/
 velocity=-.5 #m/s
 seekingalt=2 #m
 FiringAlt=2
@@ -735,7 +735,7 @@ if __name__=='__main__':
       break
 #DONT CODE ABOVE HERE
     if START == True:
-      arm_and_takeoff(3)
+      arm_and_takeoff(4)
       while True:
         if interrupt == True:
           break
