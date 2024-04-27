@@ -237,7 +237,7 @@ def WHEREINEEDTOBE():
             reached=0
     #if currentwp == 4 and reached ==1:
         #currentwp=0
-
+    print("SET WAYPOINT: ", currentwp)
     return(currentwp)
 
 #goto() Will move the drone to a GPS waypoint until it has satisfied a closeness condition,
@@ -258,7 +258,7 @@ def goto(targetLocation):
     WHEREINEEDTOBE()
     print("WP=",currentwp)
     targetLocation = waypoints[currentwp]
-
+  print("GOING TO WAYPOINT: ", currentwp)
   clock_start=0
   distanceToTargetLocation = get_distance_meters(targetLocation,vehicle.location.global_relative_frame)
   vehicle.simple_goto(targetLocation)
@@ -515,7 +515,7 @@ def subscriber():
   	if index>targsleft:
   	  index = 0
   	id_to_find=ids_to_find[index]
-  	print("INDEX: ",index)
+  	#print("INDEX: ",index)
   	#print("Looking for:",alias[index])
       
   	frame = picam2.capture_array("main")
@@ -726,10 +726,14 @@ if __name__=='__main__':
     
     if interrupt == True:
       break
-    
-    if START == True:
-      arm_and_takeoff(3)
-      goto(0)
-      while True:
-        if interrupt == True:
-          break
+    arm_and_takeoff(2)
+    while True:
+      if interrupt == True:
+        break
+      AltCorrect(4)
+    #if START == True:
+      #arm_and_takeoff(3)
+      #goto(0)
+      #while True:
+        #if interrupt == True:
+          #break
