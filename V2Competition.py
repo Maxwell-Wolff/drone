@@ -738,12 +738,12 @@ if __name__=='__main__':
       break
 #DONT CODE ABOVE HERE
     if START == True:
-      arm_and_takeoff(3)
+      #arm_and_takeoff(3)
       while True:
         if interrupt == True:
           break
         
-        goto(0)
+        #goto(0)
         #if vehicle.location.global_relative_frame.alt < 3:
           #while True:
             #if interrupt == True:
