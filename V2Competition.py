@@ -230,12 +230,12 @@ def WHEREINEEDTOBE():
     if waypointinit == 0:
         currentwp=0
         waypointinit = 1
-    for i in range(0,21):
-        if currentwp==i and reached ==1 and currentwp < 21:
+    for i in range(0,4):
+        if currentwp==i and reached ==1 and currentwp < 4:
 
             currentwp = i+1
             reached=0
-    #if currentwp == 21 and reached ==1:
+    #if currentwp == 4 and reached ==1:
         #currentwp=0
 
     return(currentwp)
