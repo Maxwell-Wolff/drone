@@ -729,6 +729,7 @@ if __name__=='__main__':
       break
 #DONT CODE ABOVE HERE
     if START == True:
+      arm_and_takeoff(3)
       goto(waypoints[0])
       goto(waypoints[1])
       #arm_and_takeoff(3)
