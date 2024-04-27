@@ -226,7 +226,6 @@ def WHEREINEEDTOBE():
 
     if flush==1:
         return(currentwp)
-
     if waypointinit == 0:
         currentwp=0
         waypointinit = 1
@@ -443,7 +442,7 @@ def AltCorrect(FiringAlt):
 		#vehicle.channels.overrides['3']=1500
 
 	send_local_ned_velocity(0,0,vz)
-	return None
+	#return None
 
 # Handles firing events: logging, trigger pull for set time, maintaining tracking.
 def fire(): #TODO: Fire logic
