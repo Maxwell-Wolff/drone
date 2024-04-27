@@ -509,7 +509,7 @@ def subscriber():
   	timetosee=3
   	if just_flushed == 1:
   		timetosee=0
-  
+    print(index)
   	id_to_find=ids_to_find[index]
   	#print("Looking for:",alias[index])
       
