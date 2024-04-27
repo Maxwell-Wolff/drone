@@ -264,7 +264,6 @@ def goto(targetLocation):
   print("GOING TO WAYPOINT: ", currentwp)
   
   while vehicle.mode.name=="GUIDED":
-    AltCorrect(3)
     currentDistance = get_distance_meters(targetLocation,vehicle.location.global_relative_frame)
     
     #if currentDistance<distanceToTargetLocation*.03:
@@ -731,7 +730,22 @@ if __name__=='__main__':
     if START == True:
       arm_and_takeoff(3)
       goto(waypoints[0])
+      if vehicle.location.global_relative_frame.alt < 2.5:
+        while True:
+          if interrupt == True:
+            break
+          AltCorrect(3)
+          if vehicle.location.global_relative_frame > 2.5:
+            break
       goto(waypoints[1])
+      if vehicle.location.global_relative_frame.alt < 2.5:
+        while True:
+          if interrupt == True:
+            break
+          AltCorrect(3)
+          if vehicle.location.global_relative_frame > 2.5:
+            break
+      
       #arm_and_takeoff(3)
       #goto(0)
       #while True:
