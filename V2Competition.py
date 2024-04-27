@@ -230,8 +230,8 @@ def WHEREINEEDTOBE():
     if waypointinit == 0:
         currentwp=0
         waypointinit = 1
-    for i in range(0,4):
-        if currentwp==i and reached ==1 and currentwp < 4:
+    for i in range(0,3):
+        if currentwp==i and reached ==1 and currentwp < 3:
 
             currentwp = i+1
             reached=0
@@ -258,10 +258,11 @@ def goto(targetLocation):
     WHEREINEEDTOBE()
     print("WP=",currentwp)
     targetLocation = waypoints[currentwp]
-  print("GOING TO WAYPOINT: ", currentwp)
+  
   clock_start=0
   distanceToTargetLocation = get_distance_meters(targetLocation,vehicle.location.global_relative_frame)
   vehicle.simple_goto(targetLocation)
+  print("GOING TO WAYPOINT: ", currentwp)
   
   while vehicle.mode.name=="GUIDED":
     AltCorrect(3)
