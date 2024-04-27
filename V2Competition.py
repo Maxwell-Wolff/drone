@@ -68,7 +68,8 @@ wp21 = LocationGlobalRelative( 37.2230851, -80.4329360, 3)
 
 
 
-waypoints=[wp1,wp2,wp3,wp4,wp5,wp6,wp7,wp8,wp9,wp10,wp11,wp12,wp13,wp14,wp15,wp16,wp17,wp18,wp19,wp20,wp21]
+#waypoints=[wp1,wp2,wp3,wp4,wp5,wp6,wp7,wp8,wp9,wp10,wp11,wp12,wp13,wp14,wp15,wp16,wp17,wp18,wp19,wp20,wp21]
+waypoints = [wp18,wp19,wp20,wp21]
 
 #######Function Variables#######
 init = 0
@@ -727,8 +728,8 @@ if __name__=='__main__':
       break
     
     if START == True:
-      #arm_and_takeoff(3)
-      #goto(0)
+      arm_and_takeoff(3)
+      goto(0)
       while True:
         if interrupt == True:
           break
