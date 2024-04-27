@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+import time
 #######GPIO#######
 gpfire = 17
 GPIO.setmode(GPIO.BCM)
