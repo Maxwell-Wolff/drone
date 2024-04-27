@@ -561,11 +561,11 @@ def subscriber():
 				  while vehicle.mode !='LOITER':
 				    time.sleep(1)
 				  track(x_ang,y_ang)
-					tracking=True
+					#tracking=True
 						#ugh=0
 				else:
 				  track(x_ang,y_ang)
-					tracking=True
+					#tracking=True
 						#ugh=0
 					
 				
