@@ -502,6 +502,7 @@ def estimatePoseSingleMarkers(corners, marker_size, mtx, distortion):
 # If marker not found for given time since last marker seen, update index and search for the next marker every cycle until a marker is again found.
 def subscriber():
   while True:
+    print("AAA")
   	if interrupt == True:
   		return None
   	global ugh, notfound_count, found_count, time_last, time_to_wait, id_to_find, ids_to_find, count, FiringAlt, sub, Fire, currentwp, found, notfound, index, time_last_seen, flush, flush_time, tracking, just_flushed
