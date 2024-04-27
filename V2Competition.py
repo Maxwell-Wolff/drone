@@ -730,22 +730,22 @@ if __name__=='__main__':
     if START == True:
       arm_and_takeoff(3)
       goto(waypoints[0])
-      if vehicle.location.global_relative_frame.alt < 2.5:
+      if vehicle.location.global_relative_frame.alt < 4:
         while True:
           if interrupt == True:
             break
-          AltCorrect(3)
+          AltCorrect(4)
           print("Correcting Alt")
-          if vehicle.location.global_relative_frame > 2.5:
+          if vehicle.location.global_relative_frame > 4:
             break
       goto(waypoints[1])
-      if vehicle.location.global_relative_frame.alt < 2.5:
+      if vehicle.location.global_relative_frame.alt < 4:
         while True:
           if interrupt == True:
             break
           AltCorrect(3)
           print("Correcting Alt")
-          if vehicle.location.global_relative_frame > 2.5:
+          if vehicle.location.global_relative_frame > 4:
             break
       
       #arm_and_takeoff(3)
