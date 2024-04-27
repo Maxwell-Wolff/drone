@@ -455,17 +455,16 @@ def fire(): #TODO: Fire logic
 	GPIO.output(gpfire, GPIO.HIGH)
 
 	while True:
-		#subscriber()
 		if time.time()-initial_time > fire_time:
 			print("Trigger Release!")
 			GPIO.output(gpfire, GPIO.LOW)
 			Fire = False
 			f= open("LOG.txt","w+")
-			f.write("USF","UAV","WaterBlast!",id_to_find,timestamp,Lat,Lon,sep = "_")
+			f.write("USF_UAV_WaterBlast!_"+id_to_find+"__"+timestamp+"_"+Lat+"_"+Lon)
 			f.close
 			index=0
 			targsleft=targsleft-1
-			ids_to_find.remove(id_to_find)
+			ids_to_find.remove(alias[id_to_find-16])
 			break
 	#goto(wp0)
 
@@ -621,8 +620,8 @@ def subscriber():
   			index = index+1
   			tracking = False
   			time_last = time.time()
-  	if index > targsleft:
-  		index=0
+    if index > targsleft:
+      index=0
   	#if flush == 1: #and time.time()-flush_time >3:dddd
           #sub.unregister()
   		
