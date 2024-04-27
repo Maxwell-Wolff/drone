@@ -571,8 +571,8 @@ def subscriber():
   					
   				  if vehicle.mode !='LOITER':
   				    vehicle.mode = VehicleMode('LOITER')
-  				    while vehicle.mode !='LOITER':
-  				      time.sleep(1)
+  				  while vehicle.mode !='LOITER':
+  				    time.sleep(1)
   				    track(x_ang,y_ang)
   					#tracking=True
   						#ugh=0
@@ -735,7 +735,7 @@ if __name__=='__main__':
       break
 #DONT CODE ABOVE HERE
     if START == True:
-      arm_and_takeoff(4)
+      arm_and_takeoff(6)
       while True:
         if interrupt == True:
           break
