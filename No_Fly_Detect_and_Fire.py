@@ -35,7 +35,7 @@ airspeed = 0.5 # 1.11m/s = see everything
 velocity=-.5 #m/s
 seekingalt=3 #m
 FiringAlt=2
-fire_time = 1
+fire_time = 0.5
 
 wp1 = LocationGlobalRelative(37.22294647349227, -80.43222861834133 ,seekingalt)
 wp2 = LocationGlobalRelative( 37.22274303730939, -80.43246465273391 ,seekingalt)
