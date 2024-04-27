@@ -504,7 +504,6 @@ def subscriber():
   while True:
   	if interrupt == True:
   		return None
-  	
   	global ugh, notfound_count, found_count, time_last, time_to_wait, id_to_find, ids_to_find, count, FiringAlt, sub, Fire, currentwp, found, notfound, index, time_last_seen, flush, flush_time, tracking, just_flushed
   
   	timetosee=3
@@ -623,7 +622,7 @@ def subscriber():
   			time_last = time.time()
   	if index > targsleft:
   		index=0
-  	if flush == 1: #and time.time()-flush_time >3:dddd
+  	#if flush == 1: #and time.time()-flush_time >3:dddd
           #sub.unregister()
   		
   
