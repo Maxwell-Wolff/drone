@@ -31,22 +31,44 @@ GPIO.output(gpfire, GPIO.LOW)
 
 #######Flight Parameters#######
 START = False
-airspeed = 2.23 # 5mph
+airspeed = 1.2 # 5mph/
 velocity=-.5 #m/s
 seekingalt=2 #m
 FiringAlt=2
 fire_time = 1
-#wp0 = LocationGlobalRelative()#HOME
-wp1 = LocationGlobalRelative(37.2232186 , -80.4330218,3)
-wp2 = LocationGlobalRelative(37.2230713, -80.4327911,3)
-wp3 = LocationGlobalRelative(37.2232485,-80.4329762,3)
-wp4 = LocationGlobalRelative(37.2230948,-80.4327562,3)
-wp5 = LocationGlobalRelative(37.2232784,-80.4329360,3)
-wp6 = LocationGlobalRelative(37.2231204,-80.4327241,3)
-wp7 = LocationGlobalRelative(37.2233105, -80.4328930,3)
-wp8 = LocationGlobalRelative(37.2231503, -80.4326892,3)
 
-waypoints=[wp1,wp2,wp3,wp4,wp5,wp6]
+
+wp1 = LocationGlobalRelative( 37.2229816, -80.4322614, 3)
+wp2 = LocationGlobalRelative( 37.2228748, -80.4323774,3)
+wp3 = LocationGlobalRelative( 37.2227680, -80.4324934, 3)
+
+wp4 = LocationGlobalRelative( 37.2228192, -80.4325725, 3)
+wp5 = LocationGlobalRelative( 37.2229255, -80.4324538,3)
+wp6 = LocationGlobalRelative( 37.2230318, -80.4323351, 3)
+
+wp7 = LocationGlobalRelative( 37.2230777, -80.4324210, 3)
+wp8 = LocationGlobalRelative( 37.2229768, -80.4325283,3)
+wp9 = LocationGlobalRelative( 37.2228758, -80.4326355, 3)
+
+wp10 = LocationGlobalRelative( 37.2229271, -80.4327187, 3)
+wp11 = LocationGlobalRelative( 37.2230312, -80.4326054,3)
+wp12 = LocationGlobalRelative( 37.2231353, -80.4324920, 3)
+
+wp13 = LocationGlobalRelative( 37.2231834, -80.4325671, 3)
+wp14 = LocationGlobalRelative( 37.2230798, -80.4326825,3)
+wp15 = LocationGlobalRelative( 37.2229762, -80.4327978, 3)
+
+wp16 = LocationGlobalRelative( 37.2230307, -80.4328743, 3)
+wp17 = LocationGlobalRelative( 37.2231359, -80.4327570,3)
+wp18 = LocationGlobalRelative( 37.2232411, -80.4326396, 3)
+
+wp19 = LocationGlobalRelative( 37.2232934, -80.4327147, 3)
+wp20 = LocationGlobalRelative( 37.2231893, -80.4328254,3)
+wp21 = LocationGlobalRelative( 37.2230851, -80.4329360, 3)
+
+
+
+waypoints=[wp1,wp2,wp3,wp4,wp5,wp6,wp7,wp8,wp9,wp10,wp11,wp12,wp13,wp14,wp15,wp16,wp17,wp18,wp19,wp20,wp21]
 
 #######Function Variables#######
 init = 0
@@ -77,8 +99,6 @@ targsleft = 3
 index = 0
 time_last_seen=0
 
-#app = Flask(__name__)
-
 #######CAMERA Parameters#######
 alias = ["GMU","GWU","VT","Howard", "USF"]
 MARKER_SIZE = 30.48  #CM
@@ -91,10 +111,6 @@ vertical_fov = 67 * (math.pi / 180) ##48.8 for V2, 41.41 for V1
 #######CAMERA INTRINSICS#######
 calib_data_path = r"/home/rpi/drone/MultiMatrix.npz"
 calib_data = np.load(calib_data_path)
-#print(calib_data.files)
-
-# r_vectors = calib_data["rVector"]
-# t_vectors = calib_data["tVector"]
 
 cam_mat = calib_data["camMatrix"]
 dist_coef = calib_data["distCoef"]
@@ -145,15 +161,15 @@ def connectMyCopter():
   vehicle = connect(connection_string,baud=baud_rate) #,wait_ready=True)
   
   print("Setting Parameters...")
-  vehicle.parameters['PLND_ENABLED']=2
+  vehicle.parameters['PLND_ENABLED']=1
   vehicle.parameters['PLND_TYPE']=1
   vehicle.parameters['PLND_EST_TYPE']=0
+  vehicle.parameters['PLND_OPTIONS']=0
   vehicle.parameters['RC8_OPTION']=39
-  vehicle.parameters['RC7_OPTION']=0
-  vehicle.parameters['RC9_OPTION']=0
-  vehicle.parameters['RC10_OPTION']=0
-  vehicle.parameters['RC11_OPTION']=0
-  vehicle.channels.overrides['3']=0
+  #vehicle.parameters['RC7_OPTION']=0
+  #vehicle.parameters['RC9_OPTION']=0
+  #vehicle.parameters['RC10_OPTION']=0
+  #vehicle.parameters['RC11_OPTION']=0
   vehicle.airspeed= airspeed
   
   return vehicle
@@ -213,13 +229,13 @@ def WHEREINEEDTOBE():
     if waypointinit == 0:
         currentwp=0
         waypointinit = 1
-    for i in range(0,2):
-        if currentwp==i and reached ==1 and currentwp < 2:
+    for i in range(0,21):
+        if currentwp==i and reached ==1 and currentwp < 21:
 
             currentwp = i+1
             reached=0
-    if currentwp == 2 and reached ==1:
-        currentwp=0
+    #if currentwp == 21 and reached ==1:
+        #currentwp=0
 
     return(currentwp)
 
@@ -249,26 +265,13 @@ def goto(targetLocation):
   while vehicle.mode.name=="GUIDED":
     currentDistance = get_distance_meters(targetLocation,vehicle.location.global_relative_frame)
     
-    if currentDistance<distanceToTargetLocation*.03:
+    #if currentDistance<distanceToTargetLocation*.03:
+    if currentDistance<0.5:
       print("Reached waypoint.")
-      if flush == 0:
-        reached=1
-        clock_start=0
-        time.sleep(1)
-        break
-        
-    #if currentDistance<3 and clock_start==0:
-      #proximity_time = time.time()
-      #clock_start=1
-
-    #if currentDistance<1 and clock_start==1:
-      #if time.time() - proximity_time > 2:
-        #print("Reached waypoint on proximity time basis")
-        #if flush ==0:
-          #reached=1
-          #clock_start=0
-          #time.sleep(2)
-          #break
+      reached=1
+      clock_start=0
+      time.sleep(1)
+      break
   
     #if tracking == False:
       #AltCorrect(seekingalt)
@@ -418,9 +421,8 @@ def track(x,y):
                 #send_local_ned_velocity(0.3,0.3,0)
                 #time_taken=0
                 #MARK NOT A TARGET HERE RETURN RESUME SIGNAL
-	#vehicle.send_mavlink(msg)
-    #vehicle.flush()
-	subscriber()
+	vehicle.send_mavlink(msg)
+    vehicle.flush()
 
 #Correct altitude by measuring altimeter and passing a velocity command to adjust accordingly.
 def AltCorrect(FiringAlt):
@@ -458,22 +460,24 @@ def fire(): #TODO: Fire logic
 			print("Trigger Release!")
 			GPIO.output(gpfire, GPIO.LOW)
 			Fire = False
-			#index=0
-			#targsleft=targsleft-1
-			#ids_to_find.remove(id_to_find)
+			f= open("LOG.txt","w+")
+			f.write("USF","UAV","WaterBlast!",id_to_find,timestamp,Lat,Lon,sep = "_")
+			f.close
+			index=0
+			targsleft=targsleft-1
+			ids_to_find.remove(id_to_find)
 			break
 	#goto(wp0)
 
-	#vehicle.mode = VehicleMode('GUIDED')
-	#while vehicle.mode != VehicleMode('GUIDED'):
-		#time.sleep(1)
-	#flush=1
-	#flush_time=time.time()
-	#dummy_yaw_initializer(True,seekingalt)
-	#time.sleep(1)
-	#TODO: should be goto() here
-	#TODO: if ids_to_find is empty, RTL
-	#subscriber()
+	vehicle.mode = VehicleMode('GUIDED')
+	while vehicle.mode != VehicleMode('GUIDED'):
+		time.sleep(1)
+	if not ids_to_find:
+	  vehicle.mode = VehicleMode('RTL')
+	  while vehicle.armed == False:
+	    time.sleep(1)
+	    
+	#goto(0)
 	return None
 
 # Given image from subscriber() do math to determine marker location, return rotation and translation vector arrays
@@ -552,17 +556,16 @@ def subscriber():
 				print("Y_Ang:",y_ang)
 				print("\n\n")
 					
-				  #if vehicle.mode !='LOITER':
-						#vehicle.mode = VehicleMode('LOITER')
-						#while vehicle.mode !='LOITER':
-							#time.sleep(1)
-						#track(x_ang,y_ang)
-						#tracking=True
+				if vehicle.mode !='LOITER':
+				  vehicle.mode = VehicleMode('LOITER')
+				  while vehicle.mode !='LOITER':
+				    time.sleep(1)
+				  track(x_ang,y_ang)
+					tracking=True
 						#ugh=0
-					#else:
-				#track(x_ang,y_ang)
-				fire()
-						#tracking=True
+				else:
+				  track(x_ang,y_ang)
+					tracking=True
 						#ugh=0
 					
 				
@@ -621,17 +624,8 @@ def subscriber():
 	if flush == 1: #and time.time()-flush_time >3:dddd
         #sub.unregister()
 		return None
-	
-	#ret,buffer = cv.imencode('.jpg', frame)
-	#frame = buffer.tobytes()
-	#yield (b'--frame\r\n'
-	 #     b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-	#goto(0)
-	return None
 
-#@app.route('/video_feed')
-#def video_feed():
-  #return Response(subscriber(), mimetype='multipart/x-mixed-replace; boundary=frame')
+	return None
 
 # Interrupt handler for given keyboard inputs. Threaded to make it always available.
 def interrupt():
@@ -713,7 +707,6 @@ def interrupt():
 
 
 if __name__=='__main__':
-  #app.run(host='0.0.0.0' , port='5000')
   vehicle = connectMyCopter()
   print("Connected!")
   
@@ -728,38 +721,8 @@ if __name__=='__main__':
       break
     
     if START == True:
-      arm_and_takeoff(2.5)
-      goto(wp1)
-      goto(wp2)
-      goto(wp3)
-      goto(wp4)
-      goto(wp5)
-      goto(wp6)
-      goto(wp7)
-      goto(wp8)
-      Land()
+      #arm_and_takeoff(3)
+      #goto(0)
       while True:
         if interrupt == True:
           break
-        #time.sleep(1)
-      #Land()
-      #while True:
-        #if interrupt == True:
-          #break
-        #subscriber()
-        #if vehicle.mode !='LOITER':
-          #vehicle.mode = VehicleMode('LOITER')
-          #while vehicle.mode !='LOITER':
-            #time.sleep(1)
-        #AltCorrect(3.5)
-      #goto(wp1)
-      #goto(wp2)
-      #goto(wp3)
-      #goto(wp4)
-      #time.sleep(1)
-      #if flush == 1:
-        #flush=0
-        #dummy_yaw_initializer(True,seekingalt)
-        #time.sleep(3)
-        #just_flushed=1
-        #goto(0)
