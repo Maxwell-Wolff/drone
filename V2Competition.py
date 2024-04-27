@@ -31,7 +31,7 @@ GPIO.output(gpfire, GPIO.LOW)
 
 #######Flight Parameters#######
 START = False
-airspeed = 1.2 # 5mph/
+airspeed = 0.8 # 5mph/
 velocity=-.5 #m/s
 seekingalt=2 #m
 FiringAlt=2
@@ -399,6 +399,7 @@ def track(x,y):
 	global Fire, tracking_time,time_taken
 	if interrupt == True:
 		return None
+	print("TRACK")
 	msg = vehicle.message_factory.landing_target_encode(
 	  0,
 	  0,
@@ -576,6 +577,7 @@ def subscriber():
   					#tracking=True
   						#ugh=0
   				  else:
+  				    
   				    track(x_ang,y_ang)
   					#tracking=True
   						#ugh=0
