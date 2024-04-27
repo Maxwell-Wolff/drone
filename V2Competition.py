@@ -38,33 +38,33 @@ FiringAlt=2
 fire_time = 1
 
 
-wp1 = LocationGlobalRelative( 37.2229816, -80.4322614, 3)
-wp2 = LocationGlobalRelative( 37.2228748, -80.4323774,3)
-wp3 = LocationGlobalRelative( 37.2227680, -80.4324934, 3)
+wp1 = LocationGlobalRelative( 37.2229816, -80.4322614, 6)
+wp2 = LocationGlobalRelative( 37.2228748, -80.4323774,6)
+wp3 = LocationGlobalRelative( 37.2227680, -80.4324934, 6)
 
-wp4 = LocationGlobalRelative( 37.2228192, -80.4325725, 3)
-wp5 = LocationGlobalRelative( 37.2229255, -80.4324538,3)
-wp6 = LocationGlobalRelative( 37.2230318, -80.4323351, 3)
+wp4 = LocationGlobalRelative( 37.2228192, -80.4325725, 6)
+wp5 = LocationGlobalRelative( 37.2229255, -80.4324538,6)
+wp6 = LocationGlobalRelative( 37.2230318, -80.4323351, 6)
 
-wp7 = LocationGlobalRelative( 37.2230777, -80.4324210, 3)
-wp8 = LocationGlobalRelative( 37.2229768, -80.4325283,3)
-wp9 = LocationGlobalRelative( 37.2228758, -80.4326355, 3)
+wp7 = LocationGlobalRelative( 37.2230777, -80.4324210, 6)
+wp8 = LocationGlobalRelative( 37.2229768, -80.4325283,6)
+wp9 = LocationGlobalRelative( 37.2228758, -80.4326355, 6)
 
-wp10 = LocationGlobalRelative( 37.2229271, -80.4327187, 3)
-wp11 = LocationGlobalRelative( 37.2230312, -80.4326054,3)
-wp12 = LocationGlobalRelative( 37.2231353, -80.4324920, 3)
+wp10 = LocationGlobalRelative( 37.2229271, -80.4327187, 6)
+wp11 = LocationGlobalRelative( 37.2230312, -80.4326054,6)
+wp12 = LocationGlobalRelative( 37.2231353, -80.4324920, 6)
 
-wp13 = LocationGlobalRelative( 37.2231834, -80.4325671, 3)
-wp14 = LocationGlobalRelative( 37.2230798, -80.4326825,3)
-wp15 = LocationGlobalRelative( 37.2229762, -80.4327978, 3)
+wp13 = LocationGlobalRelative( 37.2231834, -80.4325671, 6)
+wp14 = LocationGlobalRelative( 37.2230798, -80.4326825,6)
+wp15 = LocationGlobalRelative( 37.2229762, -80.4327978, 6)
 
-wp16 = LocationGlobalRelative( 37.2230307, -80.4328743, 3)
-wp17 = LocationGlobalRelative( 37.2231359, -80.4327570,3)
-wp18 = LocationGlobalRelative( 37.2232411, -80.4326396, 3)
+wp16 = LocationGlobalRelative( 37.2230307, -80.4328743, 6)
+wp17 = LocationGlobalRelative( 37.2231359, -80.4327570,6)
+wp18 = LocationGlobalRelative( 37.2232411, -80.4326396, 6)
 
-wp19 = LocationGlobalRelative( 37.2232934, -80.4327147, 3)
-wp20 = LocationGlobalRelative( 37.2231893, -80.4328254,3)
-wp21 = LocationGlobalRelative( 37.2230851, -80.4329360, 3)
+wp19 = LocationGlobalRelative( 37.2232934, -80.4327147, 6)
+wp20 = LocationGlobalRelative( 37.2231893, -80.4328254,6)
+wp21 = LocationGlobalRelative( 37.2230851, -80.4329360, 6)
 
 
 
