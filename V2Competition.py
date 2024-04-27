@@ -518,7 +518,7 @@ def subscriber():
       
   	frame = picam2.capture_array("main")
   	gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-      estimatePoseSingleMarkerse
+      estimatePoseSingleMarkers
       
   
   	ids = ''
