@@ -422,7 +422,7 @@ def track(x,y):
                 #time_taken=0
                 #MARK NOT A TARGET HERE RETURN RESUME SIGNAL
 	vehicle.send_mavlink(msg)
-  vehicle.flush()
+	vehicle.flush()
 
 #Correct altitude by measuring altimeter and passing a velocity command to adjust accordingly.
 def AltCorrect(FiringAlt):
