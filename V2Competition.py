@@ -464,6 +464,7 @@ def fire(): #TODO: Fire logic
 			f.close
 			index=0
 			targsleft=targsleft-1
+			print("TARGSLEFT AFTER FIRE: ",targsleft)
 			ids_to_find.remove(alias[id_to_find-16])
 			break
 	#goto(wp0)
@@ -508,10 +509,11 @@ def subscriber():
   	timetosee=3
   	if just_flushed == 1:
   		timetosee=0
+  	print("TARGSLEFT: ",targsleft)
   	if index>targsleft:
   	  index = 0
   	id_to_find=ids_to_find[index]
-  	print(index)
+  	print("INDEX: ",index)
   	#print("Looking for:",alias[index])
       
   	frame = picam2.capture_array("main")
