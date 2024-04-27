@@ -68,8 +68,8 @@ wp21 = LocationGlobalRelative( 37.2230851, -80.4329360, 3)
 
 
 
-#waypoints=[wp1,wp2,wp3,wp4,wp5,wp6,wp7,wp8,wp9,wp10,wp11,wp12,wp13,wp14,wp15,wp16,wp17,wp18,wp19,wp20,wp21]
-waypoints = [wp18,wp19,wp20,wp21]
+waypoints=[wp1,wp2,wp3,wp4,wp5,wp6,wp7,wp8,wp9,wp10,wp11,wp12,wp13,wp14,wp15,wp16,wp17,wp18,wp19,wp20,wp21]
+
 
 #######Function Variables#######
 init = 0
@@ -167,6 +167,8 @@ def connectMyCopter():
   vehicle.parameters['PLND_EST_TYPE']=0
   vehicle.parameters['PLND_OPTIONS']=0
   vehicle.parameters['RC8_OPTION']=39
+  vehicle.parameters['EK2_ALT_SOURCE']=2
+  vehicle.parameters['EK2_ENABLE']=1
   #vehicle.parameters['RC7_OPTION']=0
   #vehicle.parameters['RC9_OPTION']=0
   #vehicle.parameters['RC10_OPTION']=0
@@ -430,13 +432,14 @@ def AltCorrect(FiringAlt):
 	global interrupt
 	if interrupt == True:
 		return None               #NEED TO ADJUST PWM SIGNAL TO WORK WITH VARIOUS ALTITUDES
+	print("Correcting ALT")
 	if vehicle.location.global_relative_frame.alt < FiringAlt:
-		vz = -0.3
+		vz = -0.5
 		#vehicle.channels.overrides['3']=1650
-	if vehicle.location.global_relative_frame.alt > FiringAlt:
-		vz = 0.3
+	if vehicle.location.global_relative_frame.alt > FiringAlt*1.5:
+		vz = 0.5
 		#vehicle.channels.overrides['3']=1350
-	if vehicle.location.global_relative_frame.alt/FiringAlt < 1.2 and vehicle.location.global_relative_frame.alt/FiringAlt > 0.8:
+	if vehicle.location.global_relative_frame.alt/FiringAlt < 1.3 and vehicle.location.global_relative_frame.alt/FiringAlt > 0.9:
 		vz = 0
 		#vehicle.channels.overrides['3']=1500
 
@@ -538,8 +541,9 @@ def subscriber():
   				cv.polylines(
   				frame, [corners.astype(np.int32)], True, (0, 255, 255), 4, cv.LINE_AA
   				)
+  				print("SEEN:", alias[ids[0]-16])
   				if ids[0]==id_to_find:
-  				  print("SEEN:", alias[ids[0]-16])
+  				  vehicle.channels.overrides['8']=2000
   	
   				  corners = corners.reshape(4, 2)
   				  corners = corners.astype(int)
@@ -728,26 +732,20 @@ if __name__=='__main__':
       break
 #DONT CODE ABOVE HERE
     if START == True:
-      arm_and_takeoff(3)
-      goto(waypoints[0])
-      if vehicle.location.global_relative_frame.alt < 4:
-        while True:
-          if interrupt == True:
-            break
-          AltCorrect(4)
-          print("Correcting Alt")
-          if vehicle.location.global_relative_frame.alt > 4:
-            break
-      goto(waypoints[1])
-      if vehicle.location.global_relative_frame.alt < 4:
-        while True:
-          if interrupt == True:
-            break
-          AltCorrect(3)
-          print("Correcting Alt")
-          if vehicle.location.global_relative_frame.alt > 4:
-            break
-      
+      arm_and_takeoff(4)
+      while True:
+        if interrupt == True:
+          break
+        
+        goto(0)
+        if vehicle.location.global_relative_frame.alt < 4:
+          while True:
+            if interrupt == True:
+              break
+            AltCorrect(4)
+            time.sleep(1)
+            if vehicle.location.global_relative_frame.alt > 4:
+              break
       #arm_and_takeoff(3)
       #goto(0)
       #while True:
